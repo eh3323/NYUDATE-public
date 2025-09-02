@@ -1,0 +1,39 @@
+# NYU Dating Copilot 部署配置文件
+# 复制此文件为 deploy.config 并根据实际情况修改
+
+# 服务器配置
+SERVER_HOST="your-server.com"
+SERVER_USER="ubuntu"
+SERVER_SSH_KEY="~/.ssh/id_rsa"
+
+# 应用配置
+APP_NAME="nyudating"
+REMOTE_APP_DIR="/var/www/nyudating"
+SERVICE_NAME="nyudating"
+APP_PORT=9000
+
+# 数据库配置
+DATABASE_URL="postgresql://user:password@localhost/nyudating"
+
+# 备份配置
+BACKUP_DIR="/var/backups/nyudating"
+BACKUP_KEEP=5
+
+# 环境变量
+FLASK_ENV="production"
+SECRET_KEY="your-secret-key-here"
+
+# 邮件配置（如果需要）
+MAIL_SERVER="smtp.gmail.com"
+MAIL_PORT=587
+MAIL_USE_TLS=true
+MAIL_USERNAME="your-email@gmail.com"
+MAIL_PASSWORD="your-app-password"
+
+# 文件上传配置
+MAX_CONTENT_LENGTH=16777216  # 16MB
+UPLOAD_FOLDER="/var/www/nyudating/uploads"
+
+# 监控配置（可选）
+HEALTH_CHECK_URL="http://localhost:9000/"
+HEALTH_CHECK_TIMEOUT=30

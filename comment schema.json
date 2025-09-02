@@ -1,0 +1,83 @@
+{
+  "name": "CommentPIIModeration",
+  "strict": true,
+  "schema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "CommentPIIModerationResult",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "version",
+      "action",
+      "pii_findings",
+      "client_notice"
+    ],
+    "properties": {
+      "version": {
+        "type": "string",
+        "enum": [
+          "1.1"
+        ]
+      },
+      "action": {
+        "type": "string",
+        "description": "审核决策：仅两档",
+        "enum": [
+          "ALLOW",
+          "FLAG_AND_FIX"
+        ]
+      },
+      "pii_findings": {
+        "type": "array",
+        "description": "命中的 PII 片段（用于精准打码/替换）",
+        "items": {
+          "type": "object",
+          "required": [
+            "type",
+            "text",
+            "start",
+            "end",
+            "confidence"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "NAME_PRIVATE",
+                "CONTACT_PHONE",
+                "CONTACT_EMAIL",
+                "CONTACT_HANDLE",
+                "ADDRESS_PRECISE",
+                "ID_DOC",
+                "BANK_OR_PAYMENT",
+                "LICENSE_PLATE",
+                "OTHER"
+              ]
+            },
+            "text": {
+              "type": "string"
+            },
+            "start": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "end": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "confidence": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          }
+        }
+      },
+      "client_notice": {
+        "type": "string",
+        "description": "给用户看的极简提示。ALLOW 时应为 \"\"（空字符串）；命中时固定形态为“请移除xxx”。"
+      }
+    }
+  }
+}

@@ -1,0 +1,1876 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+  .file-upload-container {
+    margin-top: 12px;
+  }
+  
+  .file-drop-zone {
+    border: 2px dashed var(--border-light);
+    border-radius: 12px;
+    padding: 32px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: var(--surface-secondary);
+  }
+  
+  .file-drop-zone:hover {
+    border-color: var(--nyu-purple);
+    background: var(--nyu-purple-pale);
+  }
+  
+  .file-drop-zone.dragover {
+    border-color: var(--nyu-purple);
+    background: var(--nyu-purple-pale);
+    transform: scale(1.02);
+  }
+  
+  .files-list {
+    margin-top: 16px;
+    display: none;
+  }
+  
+  .files-list.has-files {
+    display: block;
+  }
+  
+  .file-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: var(--surface-secondary);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    animation: slideIn 0.3s ease;
+  }
+  
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .file-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+  }
+  
+  .file-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+  }
+  
+  .file-icon.image { background: #E3F2FD; color: #1976D2; }
+  .file-icon.doc { background: #FFF3E0; color: #F57C00; }
+  .file-icon.video { background: #F3E5F5; color: #7B1FA2; }
+  
+  .file-details {
+    flex: 1;
+  }
+  
+  .file-name {
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+  }
+  
+  .file-size {
+    font-size: 12px;
+    color: var(--text-light);
+  }
+  
+  .file-remove {
+    padding: 6px 12px;
+    background: transparent;
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+    color: var(--text-secondary);
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .file-remove:hover {
+    background: #FFE6E9;
+    border-color: #DC2626;
+    color: #DC2626;
+  }
+  
+  .add-more-btn {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--nyu-purple);
+    background: transparent;
+    color: var(--nyu-purple);
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 12px;
+  }
+  
+  .add-more-btn:hover {
+    background: var(--nyu-purple);
+    color: white;
+  }
+  
+  /* 简约企业级标签样式 */
+  .tag-minimal-blue:has(input:checked) {
+    border-color: #3B82F6 !important;
+    background: #EFF6FF !important;
+  }
+  
+  .tag-minimal-blue input:checked + span {
+    color: #1D4ED8 !important;
+    font-weight: 500;
+  }
+  
+  .tag-minimal-red:has(input:checked) {
+    border-color: #EF4444 !important;
+    background: #FEF2F2 !important;
+  }
+  
+  .tag-minimal-red input:checked + span {
+    color: #DC2626 !important;
+    font-weight: 500;
+  }
+  
+  /* 提交按钮动画 */
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  
+  .btn-primary:disabled {
+    cursor: not-allowed;
+    transform: none !important;
+  }
+
+  /* 表单验证样式 - 只在提交后显示 */
+  .form-submitted .privacy-checkbox.required:has(input:not(:checked)) {
+    border-color: #DC2626 !important;
+    background: #FEF2F2 !important;
+  }
+  
+  .form-submitted .privacy-checkbox.required:has(input:not(:checked)) div {
+    color: #DC2626 !important;
+  }
+
+  /* 移动端优化 */
+  @media (max-width: 768px) {
+    .container-narrow {
+      padding: 0 16px;
+    }
+    
+    .card {
+      padding: 20px 16px;
+      margin-bottom: 16px;
+    }
+    
+    /* 标签网格优化 */
+    .tag-grid {
+      grid-template-columns: repeat(2, 1fr) !important;
+      gap: 8px !important;
+    }
+    
+    .tag-minimal-blue, .tag-minimal-red {
+      padding: 10px 12px !important;
+      font-size: 13px !important;
+    }
+    
+    /* 文件上传区域优化 */
+    .file-drop-zone {
+      padding: 24px 16px !important;
+    }
+    
+    .file-drop-zone p:first-of-type {
+      font-size: 14px !important;
+      margin-bottom: 4px !important;
+    }
+    
+    .file-drop-zone p:last-of-type {
+      font-size: 12px !important;
+    }
+    
+    /* 文件列表优化 */
+    .file-item {
+      padding: 12px !important;
+      flex-direction: column !important;
+      align-items: stretch !important;
+    }
+    
+    .file-info {
+      margin-bottom: 8px;
+    }
+    
+    .file-remove {
+      align-self: flex-end;
+      padding: 6px 12px;
+      font-size: 12px;
+    }
+    
+    /* 表单字段优化 */
+    input[type="text"], 
+    input[type="email"], 
+    textarea {
+      padding: 12px 14px !important;
+      font-size: 16px !important; /* 防止iOS缩放 */
+    }
+    
+    textarea {
+      min-height: 120px !important;
+    }
+    
+    /* 按钮优化 */
+    .btn {
+      padding: 12px 24px !important;
+      font-size: 15px !important;
+      min-height: 44px; /* 触摸友好 */
+    }
+    
+    .add-more-btn {
+      padding: 12px !important;
+      font-size: 13px !important;
+      min-height: 44px;
+    }
+    
+    /* 提交按钮组 */
+    .submit-buttons {
+      flex-direction: column !important;
+      gap: 12px !important;
+    }
+    
+    .submit-buttons .btn {
+      width: 100% !important;
+    }
+    
+    /* 隐私设置优化 */
+    .privacy-checkbox {
+      padding: 14px !important;
+    }
+    
+    .privacy-checkbox div {
+      font-size: 14px !important;
+      line-height: 1.4 !important;
+    }
+    
+    /* 人机验证容器 */
+    #ts-container {
+      transform: scale(0.9);
+      transform-origin: center;
+    }
+    
+    /* 减少间距 */
+    .form-group {
+      margin-bottom: 20px !important;
+    }
+    
+    .alert {
+      padding: 14px 16px !important;
+      margin: 16px 0 !important;
+    }
+    
+    .section-title {
+      font-size: 24px !important;
+    }
+    
+    .section-subtitle {
+      font-size: 16px !important;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .card {
+      padding: 16px 12px;
+    }
+    
+    .tag-minimal-blue, .tag-minimal-red {
+      padding: 8px 10px !important;
+      font-size: 12px !important;
+    }
+    
+    .file-drop-zone {
+      padding: 20px 12px !important;
+    }
+    
+    .section-title {
+      font-size: 22px !important;
+    }
+    
+    .section-subtitle {
+      font-size: 15px !important;
+    }
+    
+    input[type="text"], 
+    input[type="email"] {
+      padding: 12px !important;
+    }
+    
+    #ts-container {
+      transform: scale(0.85);
+    }
+  }
+</style>
+
+<script>
+  // 存储所有选择的文件及其描述
+  const selectedFiles = {
+    image: [],
+    doc: [],
+    chat: []
+  };
+  
+  // 存储每个文件的描述
+  const fileDescriptions = {
+    image: [],
+    doc: [],
+    chat: []
+  };
+  
+  function formatFileSize(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+  }
+  
+  function getFileIcon(type) {
+    if (type === 'image') return '🖼️';
+    if (type === 'doc') return '📄';
+    if (type === 'chat') return '🎬';
+    return '📎';
+  }
+
+  function getFileType(file) {
+    const type = file.type.toLowerCase();
+    const name = file.name.toLowerCase();
+    
+    if (type.startsWith('image/')) return 'image';
+    if (type.startsWith('video/')) return 'chat';
+    if (type === 'application/pdf' || name.endsWith('.pdf')) return 'doc';
+    if (type === 'text/plain' || name.endsWith('.txt')) return 'doc';
+    if (type === 'application/msword' || name.endsWith('.doc')) return 'doc';
+    if (type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || name.endsWith('.docx')) return 'doc';
+    
+    return 'doc'; // 默认为文档类型
+  }
+
+  function handleUnifiedFileSelect(input) {
+    const files = Array.from(input.files);
+    
+    // 按文件类型分组
+    const filesByType = {
+      image: [],
+      doc: [],
+      chat: []
+    };
+    
+    files.forEach(file => {
+      const type = getFileType(file);
+      filesByType[type].push(file);
+    });
+    
+    // 对每种类型的文件分别处理，应用原有的限制逻辑
+    for (const [type, typeFiles] of Object.entries(filesByType)) {
+      if (typeFiles.length > 0) {
+        handleFileSelect(typeFiles, type);
+      }
+    }
+    
+    // 清空输入框以便下次选择
+    input.value = '';
+  }
+  
+  function handleFileSelect(input, type) {
+    const files = input.files ? Array.from(input.files) : input;
+    
+    // 文件数量和总大小限制
+    if (type === 'image') {
+      const maxImages = 10; // {{ config.MAX_IMAGES_PER_SUBMISSION }}
+      const currentCount = selectedFiles[type].length;
+      const newFilesCount = files.length;
+      
+      if (currentCount + newFilesCount > maxImages) {
+        alert(`最多只能上传${maxImages}张图片，当前已选择${currentCount}张，您尝试添加${newFilesCount}张。`);
+        return;
+      }
+      
+      // 检查图片总大小限制
+      const maxTotalSize = 20971520; // {{ config.MAX_IMAGES_TOTAL_SIZE }} 20MB
+      let currentTotalSize = selectedFiles[type].reduce((sum, file) => sum + file.size, 0);
+      let newFilesTotalSize = files.reduce((sum, file) => sum + file.size, 0);
+      
+      if (currentTotalSize + newFilesTotalSize > maxTotalSize) {
+        const maxSizeMB = Math.round(maxTotalSize / (1024 * 1024));
+        const currentSizeMB = Math.round(currentTotalSize / (1024 * 1024) * 100) / 100;
+        const newSizeMB = Math.round(newFilesTotalSize / (1024 * 1024) * 100) / 100;
+        alert(`图片总大小不能超过${maxSizeMB}MB，当前已选择${currentSizeMB}MB，您尝试添加${newSizeMB}MB。`);
+        return;
+      }
+    }
+    
+    if (type === 'doc') {
+      const maxDocs = 5; // {{ config.MAX_DOCS_PER_SUBMISSION }}
+      const currentCount = selectedFiles[type].length;
+      const newFilesCount = files.length;
+      
+      if (currentCount + newFilesCount > maxDocs) {
+        alert(`最多只能上传${maxDocs}个文档，当前已选择${currentCount}个，您尝试添加${newFilesCount}个。`);
+        return;
+      }
+      
+      // 检查文档总大小限制
+      const maxTotalSize = 20971520; // {{ config.MAX_DOCS_TOTAL_SIZE }} 20MB
+      let currentTotalSize = selectedFiles[type].reduce((sum, file) => sum + file.size, 0);
+      let newFilesTotalSize = files.reduce((sum, file) => sum + file.size, 0);
+      
+      if (currentTotalSize + newFilesTotalSize > maxTotalSize) {
+        const maxSizeMB = Math.round(maxTotalSize / (1024 * 1024));
+        const currentSizeMB = Math.round(currentTotalSize / (1024 * 1024) * 100) / 100;
+        const newSizeMB = Math.round(newFilesTotalSize / (1024 * 1024) * 100) / 100;
+        alert(`文档总大小不能超过${maxSizeMB}MB，当前已选择${currentSizeMB}MB，您尝试添加${newSizeMB}MB。`);
+        return;
+      }
+    }
+    
+    if (type === 'chat') {
+      const maxVideos = 3; // {{ config.MAX_VIDEOS_PER_SUBMISSION }}
+      const currentCount = selectedFiles[type].length;
+      const newFilesCount = files.length;
+      
+      if (currentCount + newFilesCount > maxVideos) {
+        alert(`最多只能上传${maxVideos}个视频，当前已选择${currentCount}个，您尝试添加${newFilesCount}个。`);
+        return;
+      }
+      
+      // 检查视频总大小限制
+      const maxTotalSize = 20971520; // {{ config.MAX_VIDEOS_TOTAL_SIZE }} 20MB
+      let currentTotalSize = selectedFiles[type].reduce((sum, file) => sum + file.size, 0);
+      let newFilesTotalSize = files.reduce((sum, file) => sum + file.size, 0);
+      
+      if (currentTotalSize + newFilesTotalSize > maxTotalSize) {
+        const maxSizeMB = Math.round(maxTotalSize / (1024 * 1024));
+        const currentSizeMB = Math.round(currentTotalSize / (1024 * 1024) * 100) / 100;
+        const newSizeMB = Math.round(newFilesTotalSize / (1024 * 1024) * 100) / 100;
+        alert(`视频总大小不能超过${maxSizeMB}MB，当前已选择${currentSizeMB}MB，您尝试添加${newSizeMB}MB。`);
+        return;
+      }
+    }
+    
+    // 添加新文件到列表（避免重复）
+    files.forEach(file => {
+      // 为文件添加唯一标识符
+      const fileId = `${file.name}_${file.size}_${file.lastModified}_${Date.now()}`;
+      const exists = selectedFiles[type].some(f => 
+        f.name === file.name && f.size === file.size && f.lastModified === file.lastModified
+      );
+      if (!exists) {
+        file._id = fileId; // 添加唯一ID
+        selectedFiles[type].push(file);
+        fileDescriptions[type].push(''); // 添加空描述
+      }
+    });
+    
+    // 更新显示
+    updateFilesList(type);
+  }
+  
+  function removeFile(type, index) {
+    selectedFiles[type].splice(index, 1);
+    fileDescriptions[type].splice(index, 1);
+    
+    // 清空对应的input元素，允许重新选择相同文件
+    const inputMap = {
+      'image': 'image_evidences',
+      'doc': 'doc_evidences', 
+      'chat': 'chat_recordings'
+    };
+    const inputElement = document.getElementById(inputMap[type]);
+    if (inputElement) {
+      inputElement.value = '';
+    }
+    
+    updateFilesList(type);
+  }
+  
+  function updateFileDescription(type, index, description) {
+    fileDescriptions[type][index] = description;
+  }
+  
+  function updateFilesList(type) {
+    // 更新统一的文件列表
+    updateUnifiedFilesList();
+  }
+
+  function updateUnifiedFilesList() {
+    const listContainer = document.getElementById('unified-files-list');
+    const allFiles = [];
+    
+    // 收集所有文件
+    Object.keys(selectedFiles).forEach(type => {
+      selectedFiles[type].forEach((file, index) => {
+        allFiles.push({
+          file,
+          type,
+          index,
+          description: fileDescriptions[type][index] || ''
+        });
+      });
+    });
+    
+    if (allFiles.length === 0) {
+      listContainer.classList.remove('has-files');
+      listContainer.innerHTML = '';
+      return;
+    }
+    
+    listContainer.classList.add('has-files');
+    
+    let html = '';
+    allFiles.forEach((item) => {
+      const { file, type, index } = item;
+      const isVideo = file.type.startsWith('video/');
+      const iconClass = isVideo ? 'video' : type;
+      const icon = getFileIcon(type);
+      
+      html += `
+        <div class="file-item" style="flex-direction: column; align-items: stretch;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+            <div class="file-info">
+              <div class="file-icon ${iconClass}">${icon}</div>
+              <div class="file-details">
+                <div class="file-name">${file.name}</div>
+                <div class="file-size">${formatFileSize(file.size)}</div>
+              </div>
+            </div>
+            <button type="button" class="file-remove" onclick="removeFile('${type}', ${index})">
+              移除
+            </button>
+          </div>
+          <div style="margin-top: 8px;">
+            <label style="font-size: 13px; color: var(--text-secondary); display: block; margin-bottom: 4px;">
+              <span style="color: #DC2626;">*</span> 证据说明（必填）
+            </label>
+            <textarea 
+              placeholder="请简要说明此证据的内容和相关性..." 
+              style="width: 100%; padding: 8px; border: 1px solid var(--border-light); border-radius: 6px; font-size: 13px; min-height: 60px; resize: vertical;"
+              onchange="updateFileDescription('${type}', ${index}, this.value)"
+              required
+            >${fileDescriptions[type][index] || ''}</textarea>
+          </div>
+        </div>
+      `;
+    });
+    
+    html += `
+      <div style="display:flex; align-items:center; gap:12px; margin-top: 16px;">
+        <button type="button" class="add-more-btn" onclick="document.getElementById('all_evidences').click()">
+          + 添加更多文件
+        </button>
+        <div class="meta" style="font-size:12px; color: var(--text-light);">已选 ${allFiles.length} 个文件</div>
+      </div>
+    `;
+    
+    listContainer.innerHTML = html;
+  }
+
+  // 上传进度 & 禁用提交
+  let uploading = false;
+  function anyFilesSelected(){
+    return selectedFiles.image.length + selectedFiles.doc.length + selectedFiles.chat.length > 0;
+  }
+  function toggleSubmit(disabled, text){
+    const btn = document.querySelector('button.btn.btn-primary[type="submit"]');
+    if(!btn) return;
+    btn.disabled = !!disabled;
+    if(disabled){
+      btn.dataset._text = btn.textContent;
+      btn.innerHTML = `<span class="spinner" style="width:16px;height:16px;border:2px solid #fff;border-right-color:transparent;border-radius:50%;display:inline-block;vertical-align:middle;animation:spin 0.8s linear infinite;margin-right:8px;"></span>${text||'正在上传...'}`;
+    }else{
+      btn.textContent = btn.dataset._text || '提交评价';
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    // 注意：主要的表单提交处理在下方统一处理，这里只做预检查
+  });
+
+  // 保险起见，使用脚本方式确保文件选择事件已绑定
+  document.addEventListener('DOMContentLoaded', function(){
+    const allInput = document.getElementById('all_evidences');
+    if(allInput){
+      allInput.addEventListener('change', function(e){
+        try {
+          handleUnifiedFileSelect(e.target);
+        } catch(err){
+          console.error('handleUnifiedFileSelect error:', err);
+          alert('选择文件失败：' + (err && err.message ? err.message : err));
+        }
+      });
+    }
+  });
+
+  // 使用原生XHR分批上传不可行（需后端接口支持），因此这里仅做表单提交时的上传指示
+  // 若未来改为AJAX分片上传，可在此接入xhr.upload.onprogress来实时进度
+  
+  // 拖拽功能
+  document.addEventListener('DOMContentLoaded', function() {
+    const dropZones = document.querySelectorAll('.file-drop-zone');
+    
+    dropZones.forEach(zone => {
+      zone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        zone.classList.add('dragover');
+      });
+      
+      zone.addEventListener('dragleave', () => {
+        zone.classList.remove('dragover');
+      });
+      
+      zone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        zone.classList.remove('dragover');
+        const input = zone.parentElement.querySelector('input[type="file"]');
+        const accept = input ? (input.getAttribute('accept') || '') : '';
+        const files = Array.from((e.dataTransfer && e.dataTransfer.files) ? e.dataTransfer.files : []);
+        if(files.length === 0) return;
+        const validFiles = files.filter(file => {
+          if (!accept) return true;
+          return (
+            (accept.includes('image/*') && file.type.startsWith('image/')) ||
+            (accept.includes('video/*') && file.type.startsWith('video/')) ||
+            (accept.includes('.pdf') && file.name.endsWith('.pdf')) ||
+            (accept.includes('.txt') && file.name.endsWith('.txt')) ||
+            (accept.includes('.doc') && (file.name.endsWith('.doc') || file.name.endsWith('.docx')))
+          );
+        });
+        if (validFiles.length === 0) return;
+        try{
+          handleUnifiedFileSelect({ files: validFiles });
+        }catch(err){
+          console.error('drop->handleUnifiedFileSelect error:', err);
+          alert('添加文件失败：' + (err && err.message ? err.message : err));
+        }
+      });
+    });
+  });
+  
+  // 绑定审核结果按钮事件
+  function bindModerationButtonEvents(moderationResult) {
+    const acceptBtn = document.querySelector('.accept-suggestion-btn');
+    const editBtn = document.querySelector('.edit-manual-btn');
+    
+    // 添加修改提示消息
+    addModerationTip();
+    
+    if (acceptBtn) {
+      acceptBtn.addEventListener('click', function() {
+        const descriptionTextarea = document.getElementById('description');
+        descriptionTextarea.value = moderationResult.safe_suggestion;
+        
+        // 移除审核结果显示
+        const moderationDisplay = document.querySelector('.moderation-result-display');
+        if (moderationDisplay) moderationDisplay.remove();
+        
+        // 移除提示消息
+        removeModerationTip();
+        
+        // 显示原始描述区域
+        const descriptionField = descriptionTextarea.closest('.form-group');
+        descriptionField.style.display = 'block';
+        
+        // 重置Turnstile状态
+        resetTurnstileAfterModeration();
+      });
+    }
+    
+    if (editBtn) {
+      editBtn.addEventListener('click', function() {
+        // 移除审核结果显示
+        const moderationDisplay = document.querySelector('.moderation-result-display');
+        if (moderationDisplay) moderationDisplay.remove();
+        
+        // 移除提示消息
+        removeModerationTip();
+        
+        // 显示原始描述区域让用户手动修改
+        const descriptionField = document.getElementById('description').closest('.form-group');
+        descriptionField.style.display = 'block';
+        
+        // 聚焦到文本域
+        document.getElementById('description').focus();
+        
+        // 重置Turnstile状态
+        resetTurnstileAfterModeration();
+      });
+    }
+  }
+  
+  // 添加审核失败提示消息
+  function addModerationTip() {
+    const submitButtonContainer = document.querySelector('.submit-buttons');
+    if (submitButtonContainer) {
+      // 移除可能存在的旧提示
+      removeModerationTip();
+      
+      const tipHTML = `
+        <div class="moderation-failed-tip" style="
+          margin-top: 16px;
+          padding: 12px 16px;
+          background: linear-gradient(135deg, rgba(239, 68, 68, 0.03) 0%, rgba(239, 68, 68, 0.06) 100%);
+          border: 1px solid rgba(239, 68, 68, 0.12);
+          border-radius: 12px;
+          text-align: center;
+          color: var(--text-secondary);
+          font-size: 14px;
+          line-height: 1.4;
+        ">
+          ⚠️ 审核不通过，请修改后重新提交
+        </div>
+      `;
+      submitButtonContainer.insertAdjacentHTML('afterend', tipHTML);
+    }
+  }
+  
+  // 移除审核失败提示消息
+  function removeModerationTip() {
+    const existingTip = document.querySelector('.moderation-failed-tip');
+    if (existingTip) {
+      existingTip.remove();
+    }
+  }
+  
+  // 重置Turnstile验证状态
+  function resetTurnstileAfterModeration() {
+    console.log('🔍 [DEBUG] Resetting Turnstile state after moderation success');
+    
+    // 直接重置按钮状态（不依赖turnstileManager）
+    const submitBtn = document.querySelector('button[type="submit"]');
+    if (submitBtn) {
+      submitBtn.textContent = '提交评价';
+      submitBtn.style.opacity = '1';
+      submitBtn.style.cursor = 'pointer';
+      submitBtn.disabled = false;
+      console.log('🔍 [DEBUG] Submit button reset to normal state');
+    }
+    
+    if (window.turnstileManager) {
+      // 重置Turnstile状态为可提交
+      window.turnstileManager.isReady = true;
+      
+      // 更新提交按钮状态（通过turnstileManager）
+      if (window.turnstileManager.setSubmitEnabled) {
+        window.turnstileManager.setSubmitEnabled(true);
+      }
+      
+      // 更新状态显示
+      const statusEl = document.getElementById('ts-status');
+      if (statusEl) {
+        statusEl.innerHTML = '✅ 人机验证已完成，可以提交';
+      }
+      
+      console.log('🔍 [DEBUG] TurnstileManager state reset completed');
+    }
+    
+    // 延迟再次确认状态（防止异步覆盖）
+    setTimeout(() => {
+      const submitBtn = document.querySelector('button[type="submit"]');
+      if (submitBtn && submitBtn.textContent.includes('等待验证')) {
+        console.log('🔍 [DEBUG] Button still showing wait state, forcing reset');
+        submitBtn.textContent = '提交评价';
+        submitBtn.style.opacity = '1';
+        submitBtn.style.cursor = 'pointer';
+        submitBtn.disabled = false;
+      }
+    }, 100);
+  }
+
+  // 创建审核结果显示区域的函数
+  function createModerationResultDisplay(moderationResult) {
+    // 移除现有的审核结果显示（如果有）
+    const existingResult = document.querySelector('.moderation-result-display');
+    if (existingResult) {
+      existingResult.remove();
+    }
+    
+    // 隐藏描述字段
+    const descriptionField = document.getElementById('description').closest('.form-group');
+    descriptionField.style.display = 'none';
+    
+    // 创建简约现代的审核结果HTML
+    const resultHTML = `
+      <div class="moderation-result-display" style="
+        margin: 24px 0; 
+        padding: 20px; 
+        background: linear-gradient(135deg, rgba(255, 107, 53, 0.03) 0%, rgba(255, 107, 53, 0.06) 100%);
+        border: 1px solid rgba(255, 107, 53, 0.12);
+        border-radius: 16px;
+        position: relative;
+        overflow: hidden;
+      ">
+        <div style="
+          position: absolute; 
+          top: 0; 
+          left: 0; 
+          right: 0; 
+          height: 3px; 
+          background: linear-gradient(90deg, var(--nyu-accent) 0%, rgba(255, 107, 53, 0.6) 100%);
+        "></div>
+        
+        <div style="display: flex; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
+          <div style="
+            width: 40px; 
+            height: 40px; 
+            background: linear-gradient(135deg, var(--nyu-accent) 0%, rgba(255, 107, 53, 0.8) 100%);
+            border-radius: 12px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.2);
+          ">
+            <span style="font-size: 18px;">⚠️</span>
+          </div>
+          <div style="flex: 1;">
+            <h3 style="
+              margin: 0 0 8px 0; 
+              font-size: 18px; 
+              font-weight: 600; 
+              color: var(--text-primary);
+              line-height: 1.3;
+            ">内容需要调整</h3>
+            <p style="
+              margin: 0; 
+              color: var(--text-secondary); 
+              font-size: 15px; 
+              line-height: 1.5;
+            ">${moderationResult.client_notice || '为了更好的用户体验，请按以下建议修改内容'}</p>
+          </div>
+        </div>
+
+        ${moderationResult.safe_suggestion ? `
+        <div style="
+          background: rgba(255, 255, 255, 0.7);
+          backdrop-filter: blur(10px);
+          border: 1px solid rgba(87, 6, 140, 0.08);
+          border-radius: 12px; 
+          padding: 16px; 
+          margin-bottom: 16px;
+        ">
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+            <div style="
+              width: 24px; 
+              height: 24px; 
+              background: linear-gradient(135deg, var(--nyu-purple) 0%, rgba(87, 6, 140, 0.8) 100%);
+              border-radius: 6px; 
+              display: flex; 
+              align-items: center; 
+              justify-content: center;
+            ">
+              <span style="color: white; font-size: 12px; font-weight: bold;">AI</span>
+            </div>
+            <span style="font-size: 14px; font-weight: 600; color: var(--nyu-purple);">建议改写</span>
+          </div>
+          <p style="
+            margin: 0; 
+            line-height: 1.6; 
+            color: var(--text-primary); 
+            font-size: 15px;
+            padding: 8px 0;
+          ">"${moderationResult.safe_suggestion}"</p>
+        </div>
+        ` : ''}
+        
+        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+          ${moderationResult.safe_suggestion ? `
+          <button type="button" class="accept-suggestion-btn" style="
+            padding: 10px 20px; 
+            background: linear-gradient(135deg, var(--nyu-purple) 0%, var(--nyu-purple-dark) 100%);
+            color: white; 
+            border: none; 
+            border-radius: 10px; 
+            font-weight: 600; 
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(87, 6, 140, 0.2);
+          " onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 16px rgba(87, 6, 140, 0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(87, 6, 140, 0.2)'">
+            采用建议
+          </button>
+          ` : ''}
+          <button type="button" class="edit-manual-btn" style="
+            padding: 10px 20px; 
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--text-secondary); 
+            border: 1px solid var(--border-light); 
+            border-radius: 10px; 
+            font-weight: 600; 
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(10px);
+          " onmouseover="this.style.background='var(--surface-primary)'; this.style.color='var(--nyu-purple)'; this.style.borderColor='var(--nyu-purple-pale)'" onmouseout="this.style.background='rgba(255, 255, 255, 0.9)'; this.style.color='var(--text-secondary)'; this.style.borderColor='var(--border-light)'">
+            手动修改
+          </button>
+        </div>
+        
+        <!-- 操作提示移到按钮下方 -->
+      </div>
+    `;
+    
+    // 简单插入审核结果
+    descriptionField.insertAdjacentHTML('beforebegin', resultHTML);
+    
+    // 绑定按钮事件
+    bindModerationButtonEvents(moderationResult);
+  }
+  // 修改表单提交以包含所有文件
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // 🔍 [DEBUG] Form submission started
+      console.log('🔍 [DEBUG] Form submission started');
+      
+      // 首先检查文件是否还在上传
+      if(uploading){
+        alert('文件仍在上传，请稍候完成后再提交');
+        return;
+      }
+      
+      // Add form-submitted class for validation styling
+      form.classList.add('form-submitted');
+      
+      // 使用统一的 Turnstile 验证
+      if (window.turnstileValidation) {
+        const turnstileResult = window.turnstileValidation();
+        if (!turnstileResult.valid) {
+          if (turnstileResult.reason === 'legal_agreement') {
+            alert('请先阅读并同意服务条款和隐私政策');
+            document.querySelector('input[name="legal_agreement"]').focus();
+          } else if (turnstileResult.reason === 'not_completed') {
+            alert('请先完成人机验证');
+          } else if (turnstileResult.reason === 'expired') {
+            alert('验证已过期，请重新验证');
+          }
+          return;
+        }
+      } else {
+        // 备用验证（如果 Turnstile 管理器未初始化）
+        const legalAgreement = document.querySelector('input[name="legal_agreement"]');
+        if (!legalAgreement.checked) {
+          alert('请先阅读并同意服务条款和隐私政策');
+          legalAgreement.focus();
+          return;
+        }
+      }
+      
+      // 证据文件现在为可选，不再验证文件数量
+      
+      // 验证上传的文件都有描述（只有当上传了文件时才需要验证）
+      const totalFiles = selectedFiles.image.length + selectedFiles.doc.length + selectedFiles.chat.length;
+      if (totalFiles > 0) {
+        let missingDescriptions = false;
+        ['image', 'doc', 'chat'].forEach(type => {
+          for (let i = 0; i < selectedFiles[type].length; i++) {
+            if (!fileDescriptions[type][i] || fileDescriptions[type][i].trim() === '') {
+              missingDescriptions = true;
+            }
+          }
+        });
+        
+        if (missingDescriptions) {
+          alert('请为所有证据文件填写说明');
+          return;
+        }
+      }
+      
+      // 验证至少填写了一个名字
+      const cnName = document.getElementById('professor_cn_name').value.trim();
+      const enName = document.getElementById('professor_en_name').value.trim();
+      if (!cnName && !enName) {
+        alert('请至少填写TA的中文名或英文名之一');
+        return;
+      }
+      
+      // 显示AI审核状态
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span style="display: inline-flex; align-items: center; gap: 8px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="animation: spin 1s linear infinite;"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg>AI预审核中...</span>';
+      submitBtn.style.opacity = '0.8';
+      
+      // 先进行AI内容审核
+      const moderationData = new FormData();
+      moderationData.append('csrf_token', form.querySelector('input[name="csrf_token"]').value);
+      moderationData.append('description', document.getElementById('description').value);
+      moderationData.append('action', 'moderate');
+      
+      fetch('/upload', {
+        method: 'POST',
+        body: moderationData
+      }).then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        return response.json();
+      }).then(moderationResult => {
+        console.log('🔍 [DEBUG] Moderation result:', moderationResult);
+        
+        if (moderationResult.action === 'FLAG_AND_FIX') {
+          // 审核未通过，显示修改建议
+          console.log('🔍 [DEBUG] Moderation failed, showing suggestions');
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalText;
+          submitBtn.style.opacity = '1';
+          
+          // 动态创建审核结果显示区域
+          createModerationResultDisplay(moderationResult);
+          throw new Error('MODERATION_FAILED'); // 抛出特定错误来停止链条执行
+        }
+        
+        console.log('🔍 [DEBUG] Moderation passed, proceeding to upload');
+        
+        // 审核通过，重置Turnstile状态确保按钮显示正确
+        resetTurnstileAfterModeration();
+        
+        // 开始文件上传
+        submitBtn.innerHTML = '<span style="display: inline-flex; align-items: center; gap: 8px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="animation: spin 1s linear infinite;"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg>上传中...</span>';
+        
+        const formData = new FormData(form);
+        
+        // 清除原有的文件输入
+        formData.delete('image_evidences');
+        formData.delete('doc_evidences');
+        formData.delete('chat_recordings');
+        
+        // 添加所有选择的文件及其描述
+        selectedFiles.image.forEach((file, index) => {
+          formData.append('image_evidences', file);
+          formData.append('image_descriptions', fileDescriptions.image[index]);
+        });
+        
+        selectedFiles.doc.forEach((file, index) => {
+          formData.append('doc_evidences', file);
+          formData.append('doc_descriptions', fileDescriptions.doc[index]);
+        });
+        
+        selectedFiles.chat.forEach((file, index) => {
+          formData.append('chat_recordings', file);
+          formData.append('chat_descriptions', fileDescriptions.chat[index]);
+        });
+        
+        // 添加审核通过标识，跳过后端重复审核
+        formData.append('moderation_passed', 'true');
+        
+        return fetch(form.action, {
+          method: 'POST',
+          body: formData
+        });
+      }).then(response => {
+        console.log('🔍 [DEBUG] Upload response received:', response);
+        
+        if (!response) {
+          throw new Error('No response received from server');
+        }
+        
+        if (response.redirected) {
+          // 显示成功状态
+          console.log('🔍 [DEBUG] Upload successful, redirecting to:', response.url);
+          submitBtn.innerHTML = '<span style="display: inline-flex; align-items: center; gap: 8px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"></path></svg>提交成功</span>';
+          submitBtn.style.background = '#10B981';
+          setTimeout(() => {
+            window.location.href = response.url;
+          }, 1000);
+          return null; // 明确返回null，不继续处理
+        } else {
+          console.log('🔍 [DEBUG] Upload failed, getting response text');
+          return response.text();
+        }
+      }).then(html => {
+        if (html && html.trim()) {
+          console.log('🔍 [DEBUG] Replacing page content with server response');
+          document.open();
+          document.write(html);
+          document.close();
+        }
+      }).catch(error => {
+        console.log('🔍 [DEBUG] Error in form submission:', error);
+        
+        // 如果是审核失败，不显示网络错误提示
+        if (error.message === 'MODERATION_FAILED') {
+          console.log('🔍 [DEBUG] Moderation failed, not showing network error');
+          return;
+        }
+        
+        // 真正的网络错误处理
+        console.error('Network error:', error);
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
+        submitBtn.style.opacity = '1';
+        
+        // 优雅的错误提示
+        const errorMessage = document.createElement('div');
+        errorMessage.className = 'network-error-tip';
+        errorMessage.style.cssText = `
+          margin: 16px 0; 
+          padding: 12px 16px; 
+          background: linear-gradient(135deg, rgba(220, 38, 38, 0.05) 0%, rgba(220, 38, 38, 0.08) 100%);
+          border: 1px solid rgba(220, 38, 38, 0.2); 
+          border-radius: 10px; 
+          color: #B91C1C;
+          font-size: 14px;
+          text-align: center;
+        `;
+        errorMessage.innerHTML = '🌐 网络连接异常，请检查网络后重试';
+        
+        // 插入到表单顶部
+        form.insertBefore(errorMessage, form.firstChild);
+        
+        // 5秒后自动移除
+        setTimeout(() => {
+          if (errorMessage.parentNode) {
+            errorMessage.remove();
+          }
+        }, 5000);
+      });
+    });
+  });
+</script>
+<div class="container-narrow">
+  {% if config.FLASK_ENV == 'development' %}
+  <div style="position: fixed; top: 20px; right: 20px; z-index: 1000;">
+    <button type="button" id="dev-autofill-btn" class="btn" style="padding: 10px 20px; font-size: 14px; background: #F59E0B; color: white; border: none; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
+      🚀 开发填充
+    </button>
+  </div>
+  {% endif %}
+  
+  <div class="mb-5">
+    <h1 class="section-title">提交您的评价</h1>
+    <p class="section-subtitle">请基于您的真实经历进行评价。提交后将AI预审后进入人工审核流程；提交通常在约 30 分钟内处理。</p>
+  </div>
+
+  <form action="/upload" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    <div class="card mb-4">
+      <h3 style="margin-top: 0; margin-bottom: 24px; color: var(--nyu-purple);">联系信息</h3>
+      <div class="form-group">
+        <label for="submitter_email">您的邮箱 <span style="color: #DC2626;">*</span></label>
+        <input id="submitter_email" type="email" name="submitter_email" value="{{ form_data.submitter_email if form_data else '' }}" required placeholder="you@example.com" />
+        <div class="text-light mt-1" style="font-size: 14px;">仅用于与您联系与通知进度</div>
+      </div>
+    </div>
+
+    <div class="card mb-4">
+      <h3 style="margin-top: 0; margin-bottom: 24px; color: var(--nyu-purple);">TA的信息</h3>
+
+      <div class="grid grid-2 mb-0">
+        <div class="form-group">
+          <label for="professor_cn_name">TA的中文名</label>
+          <input id="professor_cn_name" type="text" name="professor_cn_name" value="{{ form_data.professor_cn_name if form_data else '' }}" placeholder="例如：李四" />
+          <div class="text-light mt-1" style="font-size: 14px;">
+            我们仅在精准姓名匹配搜索时显示全名
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="professor_en_name">TA的英文全名</label>
+          <input id="professor_en_name" type="text" name="professor_en_name" value="{{ form_data.professor_en_name if form_data else '' }}" placeholder="例如：Alice Li" />
+        </div>
+      </div>
+    </div>
+
+    <div class="card mb-4">
+      <h3 style="margin-top: 0; margin-bottom: 24px; color: var(--nyu-purple);">评价内容</h3>
+      
+      <div class="form-group">
+        <label>标签选择</label>
+        
+        <div style="margin-top: 16px; margin-bottom: 24px;">
+          <div class="tag-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 16px;">
+            <label class="tag-minimal-blue" style="display: flex; align-items: center; padding: 12px 16px; border: 1px solid #E2E8F0; background: #FAFAFA; border-radius: 12px; cursor: pointer; transition: all 0.2s ease;">
+              <input type="checkbox" name="tag_loyal" style="margin-right: 10px; width: auto;" {{ 'checked' if form_data and form_data.tag_loyal else '' }} /> 
+              <span style="color: #475569; font-weight: 400; font-size: 14px;">忠诚</span>
+            </label>
+            <label class="tag-minimal-blue" style="display: flex; align-items: center; padding: 12px 16px; border: 1px solid #E2E8F0; background: #FAFAFA; border-radius: 12px; cursor: pointer; transition: all 0.2s ease;">
+              <input type="checkbox" name="tag_stable" style="margin-right: 10px; width: auto;" {{ 'checked' if form_data and form_data.tag_stable else '' }} /> 
+              <span style="color: #475569; font-weight: 400; font-size: 14px;">情绪稳定</span>
+            </label>
+            <label class="tag-minimal-blue" style="display: flex; align-items: center; padding: 12px 16px; border: 1px solid #E2E8F0; background: #FAFAFA; border-radius: 12px; cursor: pointer; transition: all 0.2s ease;">
+              <input type="checkbox" name="tag_sincere" style="margin-right: 10px; width: auto;" {{ 'checked' if form_data and form_data.tag_sincere else '' }} /> 
+              <span style="color: #475569; font-weight: 400; font-size: 14px;">真诚付出</span>
+            </label>
+            <label class="tag-minimal-blue" style="display: flex; align-items: center; padding: 12px 16px; border: 1px solid #E2E8F0; background: #FAFAFA; border-radius: 12px; cursor: pointer; transition: all 0.2s ease;">
+              <input type="checkbox" name="tag_humorous" style="margin-right: 10px; width: auto;" {{ 'checked' if form_data and form_data.tag_humorous else '' }} /> 
+              <span style="color: #475569; font-weight: 400; font-size: 14px;">幽默</span>
+            </label>
+          </div>
+          <div class="tag-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;">
+            <label class="tag-minimal-red" style="display: flex; align-items: center; padding: 12px 16px; border: 1px solid #E2E8F0; background: #FAFAFA; border-radius: 12px; cursor: pointer; transition: all 0.2s ease;">
+              <input type="checkbox" name="tag_positive" style="margin-right: 10px; width: auto;" {{ 'checked' if form_data and form_data.tag_positive else '' }} /> 
+              <span style="color: #475569; font-weight: 400; font-size: 14px;">出轨</span>
+            </label>
+            <label class="tag-minimal-red" style="display: flex; align-items: center; padding: 12px 16px; border: 1px solid #E2E8F0; background: #FAFAFA; border-radius: 12px; cursor: pointer; transition: all 0.2s ease;">
+              <input type="checkbox" name="tag_calm" style="margin-right: 10px; width: auto;" {{ 'checked' if form_data and form_data.tag_calm else '' }} /> 
+              <span style="color: #475569; font-weight: 400; font-size: 14px;">冷暴力</span>
+            </label>
+            <label class="tag-minimal-red" style="display: flex; align-items: center; padding: 12px 16px; border: 1px solid #E2E8F0; background: #FAFAFA; border-radius: 12px; cursor: pointer; transition: all 0.2s ease;">
+              <input type="checkbox" name="tag_leadership" style="margin-right: 10px; width: auto;" {{ 'checked' if form_data and form_data.tag_leadership else '' }} /> 
+              <span style="color: #475569; font-weight: 400; font-size: 14px;">PUA</span>
+            </label>
+            <label class="tag-minimal-red" style="display: flex; align-items: center; padding: 12px 16px; border: 1px solid #E2E8F0; background: #FAFAFA; border-radius: 12px; cursor: pointer; transition: all 0.2s ease;">
+              <input type="checkbox" name="tag_homework_heavy" style="margin-right: 10px; width: auto;" {{ 'checked' if form_data and form_data.tag_homework_heavy else '' }} /> 
+              <span style="color: #475569; font-weight: 400; font-size: 14px;">骗钱</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- 暂时注释掉自定义标签以节省页面空间
+      <div class="form-group mt-3">
+        <label for="tag_custom">自定义标签</label>
+        <input id="tag_custom" type="text" name="tag_custom" value="{{ form_data.tag_custom if form_data else '' }}" placeholder="例如：乖乖小奶狗" />
+      </div>
+      -->
+
+      <div class="form-group">
+        <label for="description">详细描述 <span style="color: #DC2626;">*</span></label>
+        <textarea id="description" name="description" rows="8" required 
+                  placeholder="请描述您个人的真实经历，避免无端指控和任何隐私信息。推荐包含新闻六要素：时间、地点、人物（使用代称）、起因、经过、结果。"
+                  style="min-height: 150px;">{{ form_data.description if form_data else '' }}</textarea>
+      </div>
+    </div>
+
+    <!-- 内容审核结果显示区域 -->
+    {% if form_data and form_data.moderation_result %}
+    <div class="card mb-4" style="border-left: 4px solid #F59E0B; background-color: #FFFBEB;">
+      <h3 style="margin-top: 0; margin-bottom: 16px; color: #D97706;">
+        <i class="icon-warning" style="margin-right: 8px;">⚠️</i>
+        内容需要修改
+      </h3>
+      
+      <div class="alert alert-warning mb-3">
+        <div class="alert-content">
+          <strong>审核提示：</strong>{{ form_data.moderation_result.client_notice }}
+        </div>
+      </div>
+
+      {% if form_data.moderation_result.required_changes %}
+      <div class="mb-3">
+        <h4 style="margin-bottom: 12px; color: #92400E;">需要修改的问题：</h4>
+        <ul style="margin: 0; padding-left: 20px;">
+          {% for change in form_data.moderation_result.required_changes %}
+          <li style="margin-bottom: 8px; color: #92400E;">{{ change.fix }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+
+      {% if form_data.moderation_result.safe_suggestion %}
+      <div class="mb-3">
+        <h4 style="margin-bottom: 12px; color: #059669;">建议改写版本：</h4>
+        <div style="background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
+          <p style="margin: 0; line-height: 1.5; color: #065F46;">{{ form_data.moderation_result.safe_suggestion }}</p>
+        </div>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+          <button type="button" id="accept-suggestion" class="btn" style="background: #059669; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">
+            采用建议版本
+          </button>
+          <button type="button" id="edit-manual" class="btn" style="background: #6B7280; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">
+            手动修改
+          </button>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- 旧的服务器端审核结果处理代码已移除，现在使用JavaScript动态生成 -->
+    {% endif %}
+
+    <div class="card mb-4">
+      <h3 style="margin-top: 0; margin-bottom: 24px; color: var(--nyu-purple);">证据材料（推荐）</h3>
+      
+      <div class="alert alert-info mb-3">
+        <div class="alert-content">
+          <strong>隐私保护提示</strong>
+          <p style="margin: 8px 0 0;">系统将对证据文件进行充分模糊化处理；原始文件仅供审核使用，对外不可访问。<strong style="color: #DC2626;"></strong></p>
+        </div>
+    </div>
+
+      <div class="form-group">
+        <label>证据文件</label>
+        <div class="file-upload-container">
+          <input type="file" id="all_evidences" name="all_evidences" 
+                 accept="image/*,.pdf,.txt,.doc,.docx,video/*" multiple 
+                 style="display: none;" />
+          <div class="file-drop-zone" onclick="document.getElementById('all_evidences').click()">
+            <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="opacity: 0.4; margin-bottom: 8px;">
+              <path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+            </svg>
+            <p style="margin: 0; color: var(--text-primary); font-weight: 500;">点击或拖拽文件到此处</p>
+            <p style="margin: 8px 0 0; color: var(--text-light); font-size: 14px;">
+              支持文档、图片、视频（如：PDF、JPG、PNG、MP4）
+            </p>
+          </div>
+          <div class="files-list" id="unified-files-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mb-4">
+      <h3 style="margin-top: 0; margin-bottom: 24px; color: var(--nyu-purple);">隐私设置</h3>
+
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <label class="privacy-checkbox" style="display: flex; align-items: flex-start; padding: 16px; background: var(--surface-secondary); border-radius: 10px; cursor: pointer;">
+          <input type="checkbox" name="privacy_homepage" style="margin-right: 12px; margin-top: 2px; width: 18px; height: 18px; min-width: 18px; flex-shrink: 0;" checked />
+          <div>
+            <div style="font-weight: 600; margin-bottom: 4px;">展示到首页</div>
+            <div class="text-light" style="font-size: 14px;">您的评价将可能出现在首页精选展示中（姓名会被保护）</div>
+          </div>
+        </label>
+
+        <label class="privacy-checkbox required" style="display: flex; align-items: flex-start; padding: 16px; background: var(--surface-secondary); border-radius: 10px; cursor: pointer; border: 1px solid var(--border-light);">
+          <input type="checkbox" name="legal_agreement" required style="margin-right: 12px; margin-top: 2px; width: 18px; height: 18px; min-width: 18px; flex-shrink: 0;" />
+          <div>
+            <div style="font-weight: 600; margin-bottom: 4px;">法律条款同意 <span style="color: #DC2626;">*</span></div>
+            <div class="text-light" style="font-size: 14px;">
+              我已阅读并同意 
+              <a href="#" onclick="openLegalModal('terms'); return false;" style="color: var(--nyu-purple); text-decoration: none; border-bottom: 1px solid var(--nyu-purple);">服务条款</a> 和 
+              <a href="#" onclick="openLegalModal('privacy'); return false;" style="color: var(--nyu-purple); text-decoration: none; border-bottom: 1px solid var(--nyu-purple);">隐私政策</a>。
+            </div>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    {% if config.TURNSTILE_SITE_KEY %}
+    <div class="mt-3" style="display:flex; flex-direction:column; align-items:center; gap:16px;">
+      <div id="ts-container" style="display: none;"></div>
+      <div id="ts-status" class="text-light" style="font-size:13px; text-align:center;">
+        <span style="color: var(--text-secondary);">人机验证将在勾选法律条款同意后自动加载</span>
+      </div>
+    </div>
+    <script>
+      // Turnstile 人机验证管理
+      class TurnstileManager {
+        constructor() {
+          this.isReady = false;
+          this.lastTokenTime = 0;
+          this.token = '';
+          this.maxRetries = 3;
+          this.retryCount = 0;
+          this.widgetId = null;
+          
+          // 创建全局回调函数（避免 bind 导致的问题）
+          const self = this;
+          window.onTsOk = function(token) {
+            console.log('🔍 [DEBUG] Global onTsOk called with token:', token);
+            self.onSuccess(token);
+          };
+          window.onTsExpired = function() {
+            console.log('🔍 [DEBUG] Global onTsExpired called');
+            self.onExpired();
+          };
+          window.onTsError = function(errorCode) {
+            console.log('🔍 [DEBUG] Global onTsError called with code:', errorCode);
+            self.onError(errorCode);
+          };
+        }
+        
+        setStatus(text, isSuccess = false) {
+          const statusEl = document.getElementById('ts-status');
+          if (!statusEl) return;
+          
+          // 使用 innerHTML 以支持 HTML 内容
+          statusEl.innerHTML = text;
+          statusEl.style.color = isSuccess ? '#059669' : '#64748B';
+          
+          if (isSuccess) {
+            statusEl.style.fontWeight = '500';
+          } else {
+            statusEl.style.fontWeight = 'normal';
+          }
+        }
+        
+        setSubmitEnabled(enabled) {
+          console.log('🔍 [DEBUG] setSubmitEnabled called with:', enabled);
+          
+          // 使用现有的toggleSubmit函数来保持一致性
+          if (typeof toggleSubmit === 'function') {
+            if (!enabled) {
+              // 根据当前状态显示不同的文本
+              const legalCheckbox = document.querySelector('input[name="legal_agreement"]');
+              let waitText = '等待验证...';
+              if (!legalCheckbox || !legalCheckbox.checked) {
+                waitText = '请先同意法律条款';
+              } else if (!this.widgetId) {
+                waitText = '正在加载验证...';
+              } else {
+                waitText = '等待验证...';
+              }
+              toggleSubmit(true, waitText);
+            } else {
+              toggleSubmit(false);
+            }
+          } else {
+            // 如果toggleSubmit不存在，使用备用方案
+            const submitBtn = document.querySelector('button[type="submit"].btn-primary');
+            if (submitBtn) {
+              submitBtn.disabled = !enabled;
+              if (enabled) {
+                submitBtn.textContent = '提交评价';
+                submitBtn.style.opacity = '1';
+                submitBtn.style.cursor = 'pointer';
+              } else {
+                const legalCheckbox = document.querySelector('input[name="legal_agreement"]');
+                let waitText = '等待验证...';
+                if (!legalCheckbox || !legalCheckbox.checked) {
+                  waitText = '请先同意法律条款';
+                } else if (!this.widgetId) {
+                  waitText = '正在加载验证...';
+                } else {
+                  waitText = '等待验证...';
+                }
+                submitBtn.textContent = waitText;
+                submitBtn.style.opacity = '0.6';
+                submitBtn.style.cursor = 'not-allowed';
+              }
+            }
+          }
+        }
+        
+        ensureHiddenInput() {
+          const form = document.querySelector('form[action="/upload"]');
+          if (!form) return null;
+          
+          let hiddenInput = form.querySelector('input[name="cf-turnstile-response"]');
+          if (!hiddenInput) {
+            hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.name = 'cf-turnstile-response';
+            form.appendChild(hiddenInput);
+          }
+          return hiddenInput;
+        }
+        
+        onSuccess(token) {
+          console.log('🔍 [DEBUG] Turnstile onSuccess called');
+          console.log('🔍 [DEBUG] Token received:', token);
+          console.log('🔍 [DEBUG] Token type:', typeof token);
+          console.log('🔍 [DEBUG] Token length:', token ? token.length : 0);
+          
+          this.token = token || '';
+          this.isReady = !!token;
+          this.lastTokenTime = Date.now();
+          this.retryCount = 0;
+          
+          console.log('🔍 [DEBUG] this.isReady:', this.isReady);
+          
+          const hiddenInput = this.ensureHiddenInput();
+          if (hiddenInput) {
+            hiddenInput.value = this.token;
+            console.log('🔍 [DEBUG] Hidden input updated with token');
+          }
+          
+          if (this.isReady) {
+            console.log('🔍 [DEBUG] Setting success status and enabling submit');
+            this.setStatus('✓ 人机验证已通过', true);
+            this.setSubmitEnabled(true);
+            
+            // 强制更新按钮状态
+            setTimeout(() => {
+              console.log('🔍 [DEBUG] Force updating submit button state');
+              this.setSubmitEnabled(true);
+            }, 100);
+          } else {
+            console.log('🔍 [DEBUG] Token invalid, setting failure status');
+            this.setStatus('❌ 验证失败，请重试', false);
+            this.setSubmitEnabled(false);
+          }
+        }
+        
+        onExpired() {
+          console.log('Turnstile expired');
+          
+          this.isReady = false;
+          this.lastTokenTime = 0;
+          this.token = '';
+          
+          this.setStatus('验证已过期，正在重新加载...', false);
+          this.setSubmitEnabled(false);
+          
+          setTimeout(() => this.reset(), 1000);
+        }
+        
+        onError(errorCode) {
+          console.warn('Turnstile encountered an issue:', errorCode || 'Unknown error');
+          
+          this.isReady = false;
+          this.retryCount++;
+          
+          // 特别处理 401 错误
+          if (errorCode === '401' || errorCode === 401) {
+            this.setStatus('❌ 人机验证配置错误 (401)，请联系管理员', false);
+            const statusEl = document.getElementById('ts-status');
+            if (statusEl) {
+              statusEl.innerHTML = `
+                <div style="color: #DC2626; font-weight: 500;">❌ 人机验证配置错误</div>
+                <div style="font-size: 11px; color: var(--text-light); margin-top: 4px;">
+                  错误代码: 401 - 请联系网站管理员检查域名配置
+                </div>
+                <button onclick="this.parentElement.style.display='none'" style="margin-top: 8px; padding: 4px 8px; border: 1px solid #DC2626; background: transparent; color: #DC2626; border-radius: 4px; cursor: pointer; font-size: 11px;">暂时跳过验证</button>
+              `;
+            }
+            // 在配置错误时允许提交（降级处理）
+            setTimeout(() => {
+              this.setSubmitEnabled(true);
+              this.isReady = true;
+            }, 3000);
+            return;
+          }
+          
+          if (this.retryCount < this.maxRetries) {
+            this.setStatus(`验证遇到问题，正在重试 (${this.retryCount}/${this.maxRetries})...`, false);
+            setTimeout(() => this.reset(), 2000);
+          } else {
+            this.setStatus('人机验证暂时不可用，请刷新页面重试', false);
+            // 在生产环境下，即使验证失败也可以考虑允许提交
+            if (window.location.hostname !== 'localhost' && this.retryCount >= this.maxRetries) {
+              console.warn('Turnstile max retries reached, but allowing form submission in production');
+              this.setSubmitEnabled(true);
+              this.isReady = true; // 允许表单提交
+            }
+          }
+          
+          if (!this.isReady) {
+            this.setSubmitEnabled(false);
+          }
+        }
+        
+        reset() {
+          try {
+            if (window.turnstile && typeof window.turnstile.reset === 'function') {
+              if (this.widgetId !== null) {
+                window.turnstile.reset(this.widgetId);
+              } else {
+                window.turnstile.reset();
+              }
+              console.log('Turnstile reset successful');
+            }
+          } catch (error) {
+            console.error('Failed to reset turnstile:', error);
+            this.setStatus('重置失败，请刷新页面', false);
+          }
+        }
+        
+        isTokenValid() {
+          if (!this.token || !this.isReady) return false;
+          
+          // 检查token是否过期（90秒内有效）
+          const tokenAge = Date.now() - this.lastTokenTime;
+          return tokenAge < 90000; // 90秒
+        }
+        
+        setupFormValidation() {
+          const form = document.querySelector('form[action="/upload"]');
+          if (!form) return;
+          
+          // 初始状态禁用提交按钮
+          this.setSubmitEnabled(false);
+          
+          // 注册 Turnstile 验证检查器（不拦截提交，只进行验证）
+          window.turnstileValidation = () => {
+            console.log('🔍 [DEBUG] Checking Turnstile validation');
+            
+            // 检查法律条款
+            const legalCheckbox = document.querySelector('input[name="legal_agreement"]');
+            if (!legalCheckbox || !legalCheckbox.checked) {
+              console.log('🔍 [DEBUG] Legal agreement not checked');
+              return { valid: false, reason: 'legal_agreement' };
+            }
+            
+            // 检查 Turnstile 验证
+            if (!this.isTokenValid()) {
+              console.log('🔍 [DEBUG] Turnstile token invalid', { token: this.token, isReady: this.isReady });
+              if (this.token && !this.isTokenValid()) {
+                this.setStatus('验证已过期，请重新验证', false);
+                this.reset();
+                return { valid: false, reason: 'expired' };
+              } else {
+                this.setStatus('请先完成人机验证', false);
+                return { valid: false, reason: 'not_completed' };
+              }
+            }
+            
+            console.log('🔍 [DEBUG] Turnstile validation passed');
+            return { valid: true };
+          };
+          
+          // 定期检查token是否即将过期
+          setInterval(() => {
+            if (this.isReady && this.lastTokenTime) {
+              const tokenAge = Date.now() - this.lastTokenTime;
+              if (tokenAge > 75000 && tokenAge < 90000) { // 75-90秒之间预警
+                this.setStatus('验证即将过期，正在自动刷新...', false);
+                this.setSubmitEnabled(false);
+                setTimeout(() => this.reset(), 1000);
+              }
+            }
+          }, 10000); // 每10秒检查一次
+        }
+        
+        initializeTurnstile() {
+          // 只有在法律条款同意后才初始化Turnstile
+          const container = document.getElementById('ts-container');
+          const statusEl = document.getElementById('ts-status');
+          
+          if (!container || !statusEl) {
+            console.error('Turnstile container or status element not found');
+            return;
+          }
+          
+          // 显示容器和状态
+          container.style.display = 'block';
+          statusEl.style.display = 'block';
+          
+          // 创建Turnstile widget
+          container.className = 'cf-turnstile';
+          container.setAttribute('data-sitekey', '{{ config.TURNSTILE_SITE_KEY }}');
+          container.setAttribute('data-theme', 'auto');
+          container.setAttribute('data-size', 'normal');
+          // 不设置 data-* 回调，只在 render 时设置
+          
+          this.setStatus('正在加载人机验证...', false);
+          
+          // 等待Turnstile API加载完成然后渲染
+          const checkAndRender = () => {
+            if (window.turnstile && typeof window.turnstile.render === 'function') {
+              try {
+                this.widgetId = window.turnstile.render('#ts-container', {
+                  sitekey: '{{ config.TURNSTILE_SITE_KEY }}',
+                  theme: 'auto',
+                  size: 'normal',
+                  callback: window.onTsOk,
+                  'expired-callback': window.onTsExpired,
+                  'error-callback': window.onTsError
+                });
+                console.log('Turnstile widget rendered successfully', this.widgetId);
+                this.setStatus('请完成人机验证', false);
+              } catch (error) {
+                console.error('Failed to render Turnstile:', error);
+                this.setStatus('⚠️ 人机验证加载失败，请刷新页面重试', false);
+                // 在验证失败时，给用户一个手动重试的选项
+                setTimeout(() => {
+                  const statusEl = document.getElementById('ts-status');
+                  if (statusEl) {
+                    statusEl.innerHTML = '⚠️ 人机验证加载失败 <button onclick="location.reload()" style="margin-left: 8px; padding: 4px 8px; border: 1px solid var(--nyu-purple); background: transparent; color: var(--nyu-purple); border-radius: 4px; cursor: pointer; font-size: 12px;">刷新重试</button>';
+                  }
+                }, 1000);
+              }
+            } else {
+              setTimeout(checkAndRender, 500);
+            }
+          };
+          checkAndRender();
+        }
+        
+        initialize() {
+          // 设置表单验证但不初始化Turnstile
+          this.setupFormValidation();
+          
+          // 监听法律条款复选框
+          const legalCheckbox = document.querySelector('input[name="legal_agreement"]');
+          if (legalCheckbox) {
+            legalCheckbox.addEventListener('change', (e) => {
+              if (e.target.checked && !this.widgetId) {
+                // 第一次勾选时初始化Turnstile
+                this.setStatus('✅ 法律条款已确认，正在加载人机验证...', false);
+                this.initializeTurnstile();
+              } else if (!e.target.checked) {
+                // 取消勾选时隐藏Turnstile
+                const container = document.getElementById('ts-container');
+                const statusEl = document.getElementById('ts-status');
+                if (container) container.style.display = 'none';
+                if (statusEl) {
+                  statusEl.innerHTML = '<span style="color: var(--text-secondary);">人机验证将在勾选法律条款同意后自动加载</span>';
+                }
+                this.isReady = false;
+                this.token = '';
+                this.setSubmitEnabled(false);
+              }
+            });
+          }
+          
+          // 初始状态：禁用提交，直到验证完成
+          this.setSubmitEnabled(false);
+        }
+      }
+      
+      // 初始化Turnstile管理器
+      const turnstileManager = new TurnstileManager();
+      turnstileManager.initialize();
+      
+      // 减少Turnstile调试信息（仅在生产环境）
+      if (window.location.hostname !== 'localhost') {
+        const originalConsoleError = console.error;
+        const originalConsoleWarn = console.warn;
+        
+        console.error = function(...args) {
+          const message = args[0];
+          if (typeof message === 'string' && (
+            message.includes('challenges.cloudflare.com') ||
+            message.includes('Turnstile') ||
+            message.includes('frame with origin')
+          )) {
+            return; // 静默处理 Turnstile 相关错误
+          }
+          originalConsoleError.apply(console, args);
+        };
+        
+        console.warn = function(...args) {
+          const message = args[0];
+          if (typeof message === 'string' && message.includes('styleMedia is a deprecated')) {
+            return; // 静默处理样式媒体查询警告
+          }
+          originalConsoleWarn.apply(console, args);
+        };
+      }
+
+      // 开发模式自动填充功能
+      {% if config.FLASK_ENV == 'development' %}
+      if (document.getElementById('dev-autofill-btn')) {
+        document.getElementById('dev-autofill-btn').addEventListener('click', function() {
+          console.log('🚀 开始自动填充...');
+          
+          // 填充联系信息
+          document.getElementById('submitter_email').value = 'developer@nyudate.com';
+          
+          // 填充TA信息
+          document.getElementById('professor_cn_name').value = '张小明';
+          document.getElementById('professor_en_name').value = 'Zhang Xiaoming';
+          document.getElementById('professor_unique_identifier').value = 'zx123';
+          document.getElementById('professor_birthday').value = '1990-05-15';
+          
+          // 选择一些标签
+          document.getElementById('tag_positive').checked = true;
+          document.getElementById('tag_loyal').checked = true;
+          document.getElementById('tag_humorous').checked = true;
+          
+          // 填充自定义标签 (已注释)
+          // document.getElementById('tag_custom').value = '课堂活跃';
+          
+          // 填充详细描述
+          document.getElementById('description').value = '这位TA在课堂上表现非常专业，总是准时到达，讲解清晰易懂。在办公时间也很耐心回答学生问题，作业批改及时且有详细反馈。特别是在期中考试前的复习课，准备了很多额外的练习题帮助我们理解难点。整体来说是一位负责任且有趣的TA。';
+          
+          // 显示成功提示
+          this.style.background = '#059669';
+          this.textContent = '✅ 已填充';
+          setTimeout(() => {
+            this.style.background = '#F59E0B';
+            this.textContent = '🚀 开发填充';
+          }, 2000);
+          
+          console.log('✅ 自动填充完成');
+        });
+      }
+      {% endif %}
+
+      // Global function for opening legal modal
+      window.openLegalModal = function(docType) {
+        const url = docType === 'terms' ? '/terms' : '/privacy';
+        
+        // Check if we're on mobile or prefer new tab
+        if (window.innerWidth <= 768) {
+          window.open(url, '_blank');
+        } else {
+          // Create iframe modal for desktop
+          createIframeModal(url);
+        }
+      };
+
+      // Create iframe modal for desktop（与 base.html 版本保持一致风格 + 复用缓存）
+      function createIframeModal(url) {
+        const existing = document.getElementById('legal-iframe-modal');
+        if (existing) existing.remove();
+
+        const overlay = document.createElement('div');
+        overlay.id = 'legal-iframe-modal';
+        overlay.setAttribute('style', 'position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: transparent; z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; animation: fadeIn 0.15s ease; overscroll-behavior: contain;');
+
+        // Scroll lock
+        const htmlEl = document.documentElement;
+        const bodyEl = document.body;
+        const prevHtmlOverflow = htmlEl.style.overflow;
+        const prevBodyOverflow = bodyEl.style.overflow;
+        htmlEl.style.overflow = 'hidden';
+        bodyEl.style.overflow = 'hidden';
+
+        const closeOverlay = () => {
+          overlay.remove();
+          htmlEl.style.overflow = prevHtmlOverflow;
+          bodyEl.style.overflow = prevBodyOverflow;
+          window.removeEventListener('keydown', escHandler);
+          window.removeEventListener('message', messageHandler);
+        };
+        overlay.addEventListener('click', closeOverlay);
+
+        window._legalIframeCache = window._legalIframeCache || {};
+        let iframe = window._legalIframeCache[url];
+        if (!iframe) {
+          iframe = document.createElement('iframe');
+          iframe.src = url;
+          window._legalIframeCache[url] = iframe;
+        }
+        iframe.setAttribute('allowtransparency', 'true');
+        iframe.style.cssText = 'width: 100%; max-width: 900px; height: 88vh; border: none; border-radius: 16px; background: white; box-shadow: 0 8px 24px rgba(10, 14, 39, 0.08), 0 2px 8px rgba(10, 14, 39, 0.06); outline: 1px solid rgba(0,0,0,0.06); overscroll-behavior: contain;';
+        iframe.addEventListener('click', function(e){ e.stopPropagation(); });
+
+        overlay.appendChild(iframe);
+        document.body.appendChild(overlay);
+
+        const messageHandler = (event) => {
+          if (event.data === 'closeLegalModal') {
+            closeOverlay();
+          }
+        };
+        window.addEventListener('message', messageHandler);
+
+        const escHandler = (event) => {
+          if (event.key === 'Escape') {
+            closeOverlay();
+          }
+        };
+        window.addEventListener('keydown', escHandler);
+      }
+    </script>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    {% endif %}
+    
+    <div class="submit-buttons" style="display: flex; gap: 16px; justify-content: center;">
+      <button class="btn btn-primary" type="submit" style="padding: 14px 32px; font-size: 16px;">
+        提交评价
+      </button>
+      <a class="btn" href="/" style="padding: 14px 32px; font-size: 16px;">返回首页</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

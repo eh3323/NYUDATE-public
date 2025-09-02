@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>{{ subject }}</title>
+    <style>
+        /* 邮件客户端兼容性样式 */
+        body, table, td, p, a, li, span {
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+        table {
+            border-collapse: collapse !important;
+        }
+        body {
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100% !important;
+            min-width: 100% !important;
+        }
+        
+        /* 品牌色彩变量 */
+        .nyu-purple { color: #57068C; }
+        .nyu-purple-dark { color: #330662; }
+        .nyu-accent { color: #FF6B35; }
+        .text-primary { color: #0A0E27; }
+        .text-secondary { color: #525F7F; }
+        .text-light { color: #8792AB; }
+        .bg-purple { background-color: #57068C; }
+        .bg-purple-light { background-color: #F3E5FF; }
+        .bg-white { background-color: #FFFFFF; }
+        .bg-gray-light { background-color: #FAFBFC; }
+        
+        /* 响应式样式 */
+        @media only screen and (max-width: 600px) {
+            .container {
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+            .header-logo {
+                width: 32px !important;
+                height: 32px !important;
+            }
+            .header-title {
+                font-size: 18px !important;
+            }
+            .hero-title {
+                font-size: 24px !important;
+                line-height: 28px !important;
+            }
+            .content-padding {
+                padding: 20px !important;
+            }
+            .button-container {
+                text-align: center !important;
+            }
+        }
+    </style>
+</head>
+<body style="margin: 0; padding: 0; background-color: #FAFBFC; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;">
+    <!-- 主容器 -->
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #FAFBFC;">
+        <tr>
+            <td style="padding: 40px 20px;">
+                <!-- 邮件内容容器 -->
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="max-width: 600px; margin: 0 auto;" class="container">
+                    
+                    <!-- 头部 -->
+                    <tr>
+                        <td style="background: linear-gradient(135deg, #57068C 0%, #330662 100%); border-radius: 16px 16px 0 0; padding: 24px 32px;" class="content-padding">
+                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                <tr>
+                                    <td style="vertical-align: middle;">
+                                        <!-- Logo 容器 -->
+                                        <div style="display: flex; align-items: center; gap: 12px;">
+                                            <div style="width: 40px; height: 40px; background-color: #FFFFFF; border-radius: 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" class="header-logo">
+                                                <div style="width: 24px; height: 24px; background-color: #57068C; border-radius: 6px;"></div>
+                                            </div>
+                                            <span style="color: #FFFFFF; font-size: 20px; font-weight: 700; letter-spacing: -0.5px;" class="header-title">NYU Date</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    
+                    <!-- 主要内容区域 -->
+                    <tr>
+                        <td style="background-color: #FFFFFF; padding: 40px 32px;" class="content-padding">
+                            <!-- 邮件标题 -->
+                            {% if email_title %}
+                            <h1 style="margin: 0 0 24px 0; font-size: 28px; font-weight: 700; line-height: 1.2; color: #0A0E27; font-family: 'SF Pro Display', -apple-system, sans-serif;" class="hero-title">
+                                {{ email_title }}
+                            </h1>
+                            {% endif %}
+                            
+                            <!-- 邮件内容 -->
+                            <div style="color: #525F7F; font-size: 16px; line-height: 1.6; margin-bottom: 32px;">
+                                {{ email_content | safe_email_html | safe }}
+                            </div>
+                            
+                            <!-- 操作按钮 (可选) -->
+                            {% if button_text and button_url %}
+                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" class="button-container">
+                                <tr>
+                                    <td style="border-radius: 12px; background: linear-gradient(135deg, #57068C 0%, #330662 100%); box-shadow: 0 4px 12px rgba(87, 6, 140, 0.3);">
+                                        <a href="{{ button_url }}" style="display: inline-block; padding: 14px 28px; font-family: inherit; font-size: 16px; font-weight: 600; color: #FFFFFF; text-decoration: none; border-radius: 12px;" target="_blank">
+                                            {{ button_text }}
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+                            {% endif %}
+                            
+                            <!-- 分隔线 -->
+                            <div style="height: 1px; background-color: #E8ECF1; margin: 32px 0;"></div>
+                            
+                            <!-- 详细信息部分 (可选) -->
+                            {% if details %}
+                            <div style="background-color: #F3E5FF; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+                                <h3 style="margin: 0 0 12px 0; font-size: 16px; font-weight: 600; color: #330662;">详细信息</h3>
+                                <div style="color: #57068C; font-size: 14px; line-height: 1.5;">
+                                    {{ details | safe_email_html | safe }}
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+                            <!-- 温馨提示 -->
+                            <div style="background-color: #F8FAFC; border-left: 4px solid #57068C; border-radius: 8px; padding: 16px; margin-bottom: 24px;">
+                                <p style="margin: 0; color: #525F7F; font-size: 14px; line-height: 1.5;">
+                                    <strong style="color: #330662;">温馨提示：</strong>
+                                    本邮件由 NYU Date 系统自动发送，请勿回复此邮件。如有疑问，请访问我们的网站或联系管理员。
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <!-- 底部信息 -->
+                    <tr>
+                        <td style="background-color: #FAFBFC; border-radius: 0 0 16px 16px; padding: 24px 32px; text-align: center; border-top: 1px solid #E8ECF1;" class="content-padding">
+                            <p style="margin: 0 0 12px 0; color: #8792AB; font-size: 14px; line-height: 1.5;">
+                                致力于以专业的方式，聚合来自同学的Dating体验
+                            </p>
+                            <p style="margin: 0 0 16px 0; color: #8792AB; font-size: 12px;">
+                                NYU Dating Copilot · 内容由用户提交，仅供参考
+                            </p>
+                            
+                            <!-- 社交链接 (可选) -->
+                            <div style="margin-top: 16px;">
+                                <a href="{{ base_url or 'https://example.com' }}" style="display: inline-block; padding: 8px 16px; background-color: #FFFFFF; color: #57068C; text-decoration: none; border-radius: 8px; font-size: 12px; font-weight: 500; border: 1px solid #E8ECF1; margin: 0 4px;" target="_blank">
+                                    访问网站
+                                </a>
+                            </div>
+                            
+                            <!-- 版权信息 -->
+                            <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid #E8ECF1;">
+                                <p style="margin: 0; color: #8792AB; font-size: 11px;">
+                                    © 2025 NYU Date
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    
+    <!-- 防垃圾邮件追踪像素 -->
+    <div style="display: none; visibility: hidden; opacity: 0; color: transparent; height: 0; width: 0;">
+        {{ tracking_content or '' }}
+    </div>
+</body>
+</html>

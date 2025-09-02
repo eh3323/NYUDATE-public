@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+  <div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+      <h2 style="margin: 0;">申诉管理</h2>
+      <div class="btn-group">
+        <a class="btn btn-ghost" href="/admin">返回仪表盘</a>
+      </div>
+    </div>
+    
+    <!-- 状态筛选 -->
+    <div class="btn-group" style="margin-bottom: 24px;">
+      <a class="btn {{ 'btn-primary' if not request.args.get('status') else 'btn-secondary' }}" href="/admin/appeals">全部申诉</a>
+      <a class="btn {{ 'btn-primary' if request.args.get('status') == 'pending' else 'btn-secondary' }}" href="/admin/appeals?status=pending">
+        待处理 
+        {% if appeals %}
+          <span class="badge badge-warning">{{ appeals | selectattr('status', 'equalto', 'pending') | list | length }}</span>
+        {% endif %}
+      </a>
+      <a class="btn {{ 'btn-primary' if request.args.get('status') == 'resolved' else 'btn-secondary' }}" href="/admin/appeals?status=resolved">已解决</a>
+      <a class="btn {{ 'btn-primary' if request.args.get('status') == 'rejected' else 'btn-secondary' }}" href="/admin/appeals?status=rejected">已拒绝</a>
+    </div>
+  </div>
+
+  {% if appeals and appeals|length > 0 %}
+    <div class="cards-grid" style="grid-template-columns: 1fr;">
+      {% for appeal in appeals %}
+        <div class="card">
+          <!-- 申诉头部信息 -->
+          <div class="card-header" style="border-bottom: 1px solid var(--border-light); padding-bottom: 16px; margin-bottom: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+              <div>
+                <h3 style="margin: 0 0 8px; font-size: 18px;">申诉 #{{ appeal.id }}</h3>
+                <div class="meta">
+                  <span>提交时间: {{ appeal.created_at.strftime('%Y-%m-%d %H:%M') }}</span> · 
+                  <span>针对记录: <a href="/admin/submission/{{ appeal.submission_id }}">#{{ appeal.submission_id }}</a></span>
+                </div>
+              </div>
+              <span class="badge {{ 'badge-warning' if appeal.status == 'pending' else ('badge-success' if appeal.status == 'resolved' else 'badge-danger') }}">
+                {{ {'pending': '待处理', 'resolved': '已解决', 'rejected': '已拒绝'}[appeal.status] or appeal.status }}
+              </span>
+            </div>
+          </div>
+          
+          <!-- 申诉内容 -->
+          <div style="margin-bottom: 20px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+              <div>
+                <label style="font-weight: 600; font-size: 14px; color: var(--text-secondary);">申诉人邮箱</label>
+                <p style="margin: 4px 0 0;">{{ appeal.email }}</p>
+              </div>
+              <div>
+                <label style="font-weight: 600; font-size: 14px; color: var(--text-secondary);">相关记录</label>
+                <p style="margin: 4px 0 0;">
+                  <a href="/s/{{ appeal.submission_id }}?source=admin" target="_blank">{{ appeal.submission.get_display_name(masked=False) }}</a>
+                </p>
+              </div>
+            </div>
+            
+            <div style="margin-bottom: 16px;">
+              <label style="font-weight: 600; font-size: 14px; color: var(--text-secondary);">申诉理由</label>
+              <div style="margin-top: 8px; padding: 16px; background: var(--surface-secondary); border-radius: 8px; white-space: pre-wrap;">{{ appeal.reason }}</div>
+            </div>
+            
+            <!-- 申诉证据 -->
+            {% if appeal.appeal_evidences %}
+            <div style="margin-bottom: 16px;">
+              <label style="font-weight: 600; font-size: 14px; color: var(--text-secondary); margin-bottom: 12px; display: block;">申诉证据 (Google Drive)</label>
+              <div style="border: 1px solid var(--border-light); border-radius: 8px; padding: 16px; background: var(--surface-secondary);">
+                {% for evidence in appeal.appeal_evidences %}
+                  <div style="margin-bottom: {% if not loop.last %}16px{% else %}0{% endif %};">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                      <span style="padding: 4px 8px; background: var(--nyu-purple-pale); color: var(--nyu-purple); border-radius: 6px; font-size: 12px; font-weight: 600;">
+                        📁 Google Drive
+                      </span>
+                      <span style="font-size: 12px; color: var(--text-light);">
+                        提交时间: {{ evidence.created_at.strftime('%m-%d %H:%M') }}
+                      </span>
+                    </div>
+                    
+                    <div style="margin-bottom: 8px;">
+                      <a href="{{ evidence.drive_link }}" target="_blank" rel="noopener noreferrer" 
+                         style="color: var(--nyu-purple); text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="m9 18 6-6-6-6"/>
+                        </svg>
+                        查看 Google Drive 证据材料
+                      </a>
+                    </div>
+                    
+                    {% if evidence.description %}
+                      <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.4; background: white; padding: 8px; border-radius: 4px; border: 1px solid var(--border-light);">
+                        <strong>说明：</strong>{{ evidence.description }}
+                      </div>
+                    {% endif %}
+                    
+                    <div style="margin-top: 8px; padding: 8px; background: var(--nyu-purple-pale); border-radius: 4px; font-size: 12px; color: var(--nyu-purple-dark);">
+                      ⚠️ <strong>注意：</strong>请确认链接可访问，并核实是否包含身份验证材料
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+            {% endif %}
+            
+            <!-- 管理员备注 -->
+            {% if appeal.admin_notes %}
+            <div style="margin-bottom: 16px;">
+              <label style="font-weight: 600; font-size: 14px; color: var(--text-secondary);">管理员备注</label>
+              <div style="margin-top: 8px; padding: 16px; background: var(--nyu-purple-pale); border-radius: 8px;">{{ appeal.admin_notes }}</div>
+            </div>
+            {% endif %}
+          </div>
+          
+          <!-- 操作区域 -->
+          {% if appeal.status == 'pending' %}
+          <div style="border-top: 1px solid var(--border-light); padding-top: 20px;">
+            <form action="/admin/appeal/{{ appeal.id }}/action" method="post">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+              
+              <div class="form-group" style="margin-bottom: 16px;">
+                <label for="note_{{ appeal.id }}">处理备注（可选）</label>
+                <textarea name="note" id="note_{{ appeal.id }}" rows="3" placeholder="请记录处理结果、原因或其他相关信息"></textarea>
+              </div>
+              
+              <div class="btn-group">
+                <button class="btn btn-primary" name="action" value="resolve" type="submit">
+                  同意申诉
+                </button>
+                <button class="btn btn-secondary" name="action" value="reject" type="submit">
+                  拒绝申诉
+                </button>
+                <button class="btn btn-ghost" name="action" value="delete" type="submit" 
+                        onclick="return confirm('确定删除该申诉？此操作不可撤销。')" style="color: #DC2626;">
+                  删除申诉
+                </button>
+              </div>
+            </form>
+          </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="card">
+      <div style="text-align: center; padding: 48px 24px;">
+        <div style="font-size: 48px; margin-bottom: 16px;">📝</div>
+        <h3 style="margin: 0 0 8px;">暂无申诉记录</h3>
+        <p class="text-secondary">当用户提交申诉时，相关信息会在这里显示</p>
+      </div>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

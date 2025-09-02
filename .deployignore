@@ -1,0 +1,46 @@
+# 虚拟环境
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# 日志文件
+logs/
+*.log
+
+# 上传文件
+uploads/
+evidences/
+
+# 数据库 (PostgreSQL只用远程连接，无本地文件)
+# No local database files needed
+
+# 开发文件
+.git/
+.gitignore
+.DS_Store
+.vscode/
+.idea/
+
+# 临时文件
+tmp/
+temp/
+*.tmp
+
+# 配置文件（可能包含敏感信息）
+.env
+config.local.py
+
+# 测试文件
+tests/
+test_*.py
+*_test.py
+
+# 部署脚本本身
+deploy-local.sh
+
+# 备份文件
+app_old.py
+app_backup_*.py
+*.backup.*

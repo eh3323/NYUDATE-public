@@ -1,0 +1,32 @@
+[Unit]
+Description=NYU Dating Copilot Web Application
+After=network.target redis-server.service
+Wants=redis-server.service
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/nyudating
+Environment=PATH=/var/www/nyudating/.venv/bin
+ExecStart=/var/www/nyudating/.venv/bin/python app.py
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=mixed
+TimeoutStopSec=5
+PrivateTmp=true
+Restart=on-failure
+RestartSec=10
+
+# 日志设置
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=nyudating
+
+# 安全设置
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/www/nyudating/uploads /var/www/nyudating/logs
+
+[Install]
+WantedBy=multi-user.target

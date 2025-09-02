@@ -1,0 +1,474 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+.embedded body {
+  background: transparent !important;
+  background-image: none !important;
+}
+.embedded header { display: none !important; }
+.embedded .container { margin: 0 !important; padding: 0 !important; }
+.embedded .legal-modal-overlay { background: transparent !important; }
+.legal-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: transparent; /* 移除遮罩与模糊 */
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.15s ease;
+}
+
+.legal-modal {
+  background: var(--surface-primary);
+  border-radius: 16px;
+  /* 更柔和的阴影与边框，减少沉重感 */
+  box-shadow: 0 8px 24px rgba(10, 14, 39, 0.08), 0 2px 8px rgba(10, 14, 39, 0.06);
+  border: 1px solid var(--border-light);
+  width: 100%;
+  max-width: 900px;
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  animation: fadeIn 0.15s ease;
+}
+
+.legal-modal-header {
+  padding: 24px 32px 0;
+  border-bottom: 1px solid var(--border-light);
+  flex-shrink: 0;
+}
+
+.legal-modal-tabs {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 24px;
+}
+
+.legal-modal-tab {
+  padding: 12px 24px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: var(--text-secondary);
+}
+
+.legal-modal-tab.active {
+  background: var(--nyu-purple);
+  color: white;
+}
+
+.legal-modal-tab:hover:not(.active) {
+  background: var(--nyu-purple-pale);
+  color: var(--nyu-purple);
+}
+
+.legal-modal-close {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  background: transparent; /* 无背景 */
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--text-light);
+  transition: color 0.2s ease;
+  padding: 0;             /* 移除内边距，避免显示为椭圆/圆形 */
+  line-height: 1;         /* 防止字体行高导致按钮显得椭圆 */
+}
+
+.legal-modal-close:hover {
+  color: var(--text-primary);
+}
+
+.legal-modal-content {
+  padding: 0 32px 32px;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+.legal-content {
+  display: none;
+  line-height: 1.7;
+  color: var(--text-primary);
+}
+
+.legal-content.active {
+  display: block;
+  animation: fadeIn 0.2s ease;
+}
+
+.legal-content h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--nyu-purple);
+  margin: 0 0 24px 0;
+}
+
+.legal-content h2 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 32px 0 16px 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--nyu-purple-pale);
+}
+
+.legal-content h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 24px 0 12px 0;
+}
+
+.legal-content p {
+  margin: 16px 0;
+}
+
+.legal-content ul, .legal-content ol {
+  margin: 16px 0;
+  padding-left: 24px;
+}
+
+.legal-content li {
+  margin: 8px 0;
+}
+
+.legal-content a {
+  color: var(--nyu-purple);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+.legal-content a:hover {
+  border-bottom-color: var(--nyu-purple);
+}
+
+.legal-content strong {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.legal-content blockquote {
+  border-left: 4px solid var(--nyu-purple);
+  padding: 16px 24px;
+  margin: 24px 0;
+  background: var(--nyu-purple-pale);
+  border-radius: 0 8px 8px 0;
+}
+
+.legal-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px;
+  color: var(--text-secondary);
+}
+
+.legal-loading svg {
+  animation: spin 1s linear infinite;
+  margin-right: 12px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* 简化为淡入动画，减少炫目与跳动感 */
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .legal-modal-overlay {
+    padding: 10px;
+  }
+  
+  .legal-modal {
+    max-height: 90vh;
+  }
+  
+  .legal-modal-header {
+    padding: 20px 20px 0;
+  }
+  
+  .legal-modal-content {
+    padding: 0 20px 20px;
+  }
+  
+  .legal-modal-close {
+    top: 16px;
+    right: 16px;
+  }
+  
+  .legal-modal-tabs {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .legal-modal-tab {
+    text-align: center;
+  }
+  
+  .legal-content h1 {
+    font-size: 24px;
+  }
+  
+  .legal-content h2 {
+    font-size: 18px;
+  }
+}
+</style>
+
+<div class="legal-modal-overlay" onclick="closeLegalModal(event)">
+  <div class="legal-modal" onclick="event.stopPropagation()">
+    <div class="legal-modal-header">
+      <div class="legal-modal-tabs">
+        <button class="legal-modal-tab active" data-lang="zh" onclick="switchLanguage('zh')">
+          中文
+        </button>
+        <button class="legal-modal-tab" data-lang="en" onclick="switchLanguage('en')">
+          English
+        </button>
+      </div>
+      <button class="legal-modal-close" onclick="closeLegalModal()" aria-label="关闭">
+        ×
+      </button>
+    </div>
+    
+    <div class="legal-modal-content">
+      <div id="legal-content-zh" class="legal-content active">
+        <div class="legal-loading">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12a9 9 0 11-6.219-8.56"/>
+          </svg>
+          加载中...
+        </div>
+      </div>
+      
+      <div id="legal-content-en" class="legal-content">
+        <div class="legal-loading">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12a9 9 0 11-6.219-8.56"/>
+          </svg>
+          Loading...
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Global variables
+let currentDocType = '{{ doc_type }}';
+let currentLang = 'zh';
+let loadedContent = {};
+
+// Initialize modal
+document.addEventListener('DOMContentLoaded', function() {
+  // If loaded inside an iframe, mark document for embedded styles
+  try {
+    if (window.parent !== window) {
+      document.documentElement.classList.add('embedded');
+      // 提升 overlay 为 body 直接子元素并隐藏其他兄弟，避免任何底层容器叠在后面
+      const overlay = document.querySelector('.legal-modal-overlay');
+      if (overlay && overlay.parentElement !== document.body) {
+        overlay.parentElement && overlay.parentElement.removeChild(overlay);
+        document.body.appendChild(overlay);
+      }
+      Array.prototype.forEach.call(document.body.children, function(node) {
+        if (node !== document.querySelector('.legal-modal-overlay')) {
+          node.style.display = 'none';
+        }
+      });
+      document.documentElement.style.background = 'transparent';
+      document.body.style.background = 'transparent';
+      document.body.style.margin = '0';
+    }
+  } catch (e) { /* ignore */ }
+  loadLegalContent('zh');
+  
+  // Handle ESC key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      closeLegalModal();
+    }
+  });
+});
+
+// Switch language
+function switchLanguage(lang) {
+  currentLang = lang;
+  
+  // Update tab states
+  document.querySelectorAll('.legal-modal-tab').forEach(tab => {
+    tab.classList.remove('active');
+  });
+  document.querySelector(`[data-lang="${lang}"]`).classList.add('active');
+  
+  // Update content visibility
+  document.querySelectorAll('.legal-content').forEach(content => {
+    content.classList.remove('active');
+  });
+  document.getElementById(`legal-content-${lang}`).classList.add('active');
+  
+  // Load content if not already loaded
+  loadLegalContent(lang);
+}
+
+// Load legal content
+async function loadLegalContent(lang) {
+  const contentId = `legal-content-${lang}`;
+  const cacheKey = `${currentDocType}_${lang}`;
+  
+  // Return if already loaded
+  if (loadedContent[cacheKey]) {
+    document.getElementById(contentId).innerHTML = loadedContent[cacheKey];
+    return;
+  }
+  
+  try {
+    const filename = currentDocType === 'terms' 
+      ? (lang === 'zh' ? 'TERMS_OF_SERVICE_ZH.md' : 'TERMS_OF_SERVICE.md')
+      : (lang === 'zh' ? 'PRIVACY_POLICY_ZH.md' : 'PRIVACY_POLICY.md');
+    
+    const response = await fetch(`/static/legal/${filename}`);
+    if (!response.ok) throw new Error('Failed to load content');
+    
+    const markdown = await response.text();
+    const html = convertMarkdownToHTML(markdown);
+    
+    loadedContent[cacheKey] = html;
+    document.getElementById(contentId).innerHTML = html;
+    
+  } catch (error) {
+    console.error('Error loading legal content:', error);
+    document.getElementById(contentId).innerHTML = `
+      <div style="text-align: center; padding: 40px; color: var(--text-secondary);">
+        <p>${lang === 'zh' ? '加载失败，请稍后重试' : 'Failed to load content, please try again later'}</p>
+        <button class="btn btn-primary" onclick="loadLegalContent('${lang}')" style="margin-top: 16px;">
+          ${lang === 'zh' ? '重新加载' : 'Reload'}
+        </button>
+      </div>
+    `;
+  }
+}
+
+// Simple markdown to HTML converter
+function convertMarkdownToHTML(markdown) {
+  return markdown
+    // Headers
+    .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+    .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+    .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+    
+    // Bold
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    
+    // Links
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>')
+    
+    // Email links
+    .replace(/mailto:([^\s)]+)/g, 'mailto:$1')
+    
+    // Lists
+    .replace(/^\* (.*$)/gim, '<li>$1</li>')
+    .replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>')
+    
+    // Blockquotes
+    .replace(/^> (.*$)/gim, '<blockquote>$1</blockquote>')
+    
+    // Paragraphs
+    .replace(/\n\n/g, '</p><p>')
+    .replace(/^(?!<[h|u|b])(.+)$/gim, '<p>$1</p>')
+    
+    // Clean up
+    .replace(/<p><\/p>/g, '')
+    .replace(/<p>(<h[1-6]>)/g, '$1')
+    .replace(/(<\/h[1-6]>)<\/p>/g, '$1')
+    .replace(/<p>(<ul>)/g, '$1')
+    .replace(/(<\/ul>)<\/p>/g, '$1')
+    .replace(/<p>(<blockquote>)/g, '$1')
+    .replace(/(<\/blockquote>)<\/p>/g, '$1');
+}
+
+// Close modal
+function closeLegalModal(event) {
+  if (event && event.target !== event.currentTarget) return;
+  
+  // Check if this is a standalone modal page or embedded
+  if (window.parent !== window) {
+    // If in iframe, notify parent
+    window.parent.postMessage('closeLegalModal', '*');
+  } else {
+    // If standalone page, go back or close
+    if (document.referrer) {
+      window.history.back();
+    } else {
+      window.close();
+    }
+  }
+}
+
+// Global function for opening modal from other pages
+window.openLegalModal = function(docType) {
+  const url = docType === 'terms' ? '/terms' : '/privacy';
+  
+  // Check if we're on mobile or prefer new tab
+  if (window.innerWidth <= 768) {
+    window.open(url, '_blank');
+  } else {
+    // Create iframe modal for desktop
+    createIframeModal(url);
+  }
+};
+
+// Create iframe modal for desktop
+function createIframeModal(url) {
+  // Remove existing modal if any
+  const existing = document.getElementById('legal-iframe-modal');
+  if (existing) existing.remove();
+  
+  const modalHTML = `
+    <div id="legal-iframe-modal" style="
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+      background: rgba(0,0,0,0.6); z-index: 1000; display: flex; 
+      align-items: center; justify-content: center; padding: 20px;
+      animation: fadeIn 0.3s ease;
+    " onclick="this.remove()">
+      <iframe src="${url}" style="
+        width: 100%; max-width: 900px; height: 80vh; border: none; 
+        border-radius: 16px; background: white;
+        box-shadow: 0 20px 60px rgba(87, 6, 140, 0.3);
+      " onclick="event.stopPropagation()"></iframe>
+    </div>
+  `;
+  
+  document.body.insertAdjacentHTML('beforeend', modalHTML);
+  
+  // Listen for close message from iframe
+  const messageHandler = (event) => {
+    if (event.data === 'closeLegalModal') {
+      document.getElementById('legal-iframe-modal')?.remove();
+      window.removeEventListener('message', messageHandler);
+    }
+  };
+  window.addEventListener('message', messageHandler);
+}
+</script>
+{% endblock %}

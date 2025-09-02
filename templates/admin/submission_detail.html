@@ -1,0 +1,398 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card">
+  <h2>提交详情 #{{ sub.id }}</h2>
+  <p class="muted">创建于 {{ sub.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+
+  <form action="/admin/submission/{{ sub.id }}/action" method="post" class="mt-16">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    <div class="row">
+      <div>
+        <label>TA的中文名</label>
+        <input type="text" name="professor_cn_name" value="{{ sub.professor_cn_name or '' }}" />
+      </div>
+      <div>
+        <label>TA的英文名</label>
+        <input type="text" name="professor_en_name" value="{{ sub.professor_en_name or '' }}" />
+      </div>
+    </div>
+    <div class="row mt-8">
+      <div>
+        <label>唯一标识（NetID/课程号）</label>
+        <input type="text" name="professor_unique_identifier" value="{{ sub.professor_unique_identifier or '' }}" />
+      </div>
+      <div>
+        <label>出生日期（可选）</label>
+        <input type="date" name="professor_birthday" value="{{ sub.professor_birthday or '' }}" />
+      </div>
+    </div>
+
+    <div class="mt-16">
+      <label>描述</label>
+      <textarea name="description" rows="6">{{ sub.description or '' }}</textarea>
+    </div>
+
+    <div class="mt-16">
+      <label>标签</label>
+      
+      <!-- 褒义标签 -->
+      <div style="margin-top: 12px; margin-bottom: 16px;">
+        <h4 style="font-size: 14px; color: #059669; margin-bottom: 8px;">积极品质</h4>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+          <label style="display: flex; align-items: center; padding: 8px; background: #F0FDF4; border-radius: 6px;">
+            <input type="checkbox" name="tag_loyal" {% if sub.tag_loyal %}checked{% endif %} style="margin-right: 8px;"/> 
+            <span style="color: #059669;">忠诚</span>
+          </label>
+          <label style="display: flex; align-items: center; padding: 8px; background: #F0FDF4; border-radius: 6px;">
+            <input type="checkbox" name="tag_stable" {% if sub.tag_stable %}checked{% endif %} style="margin-right: 8px;"/> 
+            <span style="color: #059669;">情绪稳定</span>
+          </label>
+          <label style="display: flex; align-items: center; padding: 8px; background: #F0FDF4; border-radius: 6px;">
+            <input type="checkbox" name="tag_sincere" {% if sub.tag_sincere %}checked{% endif %} style="margin-right: 8px;"/> 
+            <span style="color: #059669;">真诚付出</span>
+          </label>
+          <label style="display: flex; align-items: center; padding: 8px; background: #F0FDF4; border-radius: 6px;">
+            <input type="checkbox" name="tag_humorous" {% if sub.tag_humorous %}checked{% endif %} style="margin-right: 8px;"/> 
+            <span style="color: #059669;">幽默</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- 贬义标签 -->
+      <div style="margin-bottom: 16px;">
+        <h4 style="font-size: 14px; color: #DC2626; margin-bottom: 8px;">问题行为</h4>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+          <label style="display: flex; align-items: center; padding: 8px; background: #FEF2F2; border-radius: 6px;">
+            <input type="checkbox" name="tag_positive" {% if sub.tag_positive %}checked{% endif %} style="margin-right: 8px;"/> 
+            <span style="color: #DC2626;">出轨</span>
+          </label>
+          <label style="display: flex; align-items: center; padding: 8px; background: #FEF2F2; border-radius: 6px;">
+            <input type="checkbox" name="tag_calm" {% if sub.tag_calm %}checked{% endif %} style="margin-right: 8px;"/> 
+            <span style="color: #DC2626;">冷暴力</span>
+          </label>
+          <label style="display: flex; align-items: center; padding: 8px; background: #FEF2F2; border-radius: 6px;">
+            <input type="checkbox" name="tag_leadership" {% if sub.tag_leadership %}checked{% endif %} style="margin-right: 8px;"/> 
+            <span style="color: #DC2626;">PUA</span>
+          </label>
+          <label style="display: flex; align-items: center; padding: 8px; background: #FEF2F2; border-radius: 6px;">
+            <input type="checkbox" name="tag_homework_heavy" {% if sub.tag_homework_heavy %}checked{% endif %} style="margin-right: 8px;"/> 
+            <span style="color: #DC2626;">骗钱</span>
+          </label>
+        </div>
+      </div>
+      
+      <div class="mt-8">
+        <label>自定义标签</label>
+        <input type="text" name="tag_custom" value="{{ sub.tag_custom or '' }}" />
+      </div>
+    </div>
+
+    <div class="mt-16">
+      <h3 style="margin-bottom: 12px; color: var(--nyu-purple);">展示设置</h3>
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <label style="display: flex; align-items: center; padding: 12px; background: #F0F9FF; border-radius: 8px; border: 1px solid #E0F2FE;">
+          <input type="checkbox" name="allow_public_evidence" {% if sub.allow_public_evidence %}checked{% endif %} style="margin-right: 12px;"/>
+          <div>
+            <div style="font-weight: 500; margin-bottom: 4px;">开放缩略图展示</div>
+            <div style="font-size: 13px; color: #64748B;">允许其他用户查看模糊的证据缩略图（推荐开启）</div>
+          </div>
+        </label>
+        
+        <label style="display: flex; align-items: center; padding: 12px; background: #F0F9FF; border-radius: 8px; border: 1px solid #E0F2FE;">
+          <input type="checkbox" name="privacy_homepage" {% if sub.privacy_homepage %}checked{% endif %} style="margin-right: 12px;"/>
+          <div>
+            <div style="font-weight: 500; margin-bottom: 4px;">首页精选展示</div>
+            <div style="font-size: 13px; color: #64748B;">该评价会出现在首页精选中（姓名会被保护）</div>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <div class="mt-16">
+      <h3 style="margin-bottom: 12px; color: var(--nyu-purple);">点赞管理</h3>
+      <div style="padding: 16px; background: #FEF3F2; border-radius: 8px; border: 1px solid #FCA5A5;">
+        <label>
+          <span style="font-weight: 500; margin-bottom: 8px; display: block;">点赞数量</span>
+          <input type="number" name="like_count" value="{{ sub.like_count }}" min="0" style="width: 150px; margin-right: 12px;" />
+          <span style="font-size: 13px; color: #64748B;">
+            当前实际点赞数: {{ sub.get_like_count() }} | 
+            <a href="/s/{{ sub.id }}?source=admin" target="_blank" style="color: var(--nyu-purple);">查看详情页</a>
+          </span>
+        </label>
+        <div style="font-size: 12px; color: #991B1B; margin-top: 8px;">
+          ⚠️ 管理员特权：可以手动调整显示的点赞数量
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-16">
+      <h3>证据文件 (管理员查看)</h3>
+      {% if sub.evidences %}
+        <div class="mt-8">
+          {# 先显示图片类型的证据 #}
+          {% for ev in sub.evidences %}
+            {% if ev.category in ['image','chat_image'] %}
+            <div class="mt-8" style="border: 1px solid #dee2e6; border-radius: 8px; padding: 12px;">
+                <div style="margin-bottom: 8px;">
+                  <strong>图片文件:</strong> {{ ev.original_filename }}
+                  <span class="muted" style="margin-left: 8px;">({{ (ev.file_size / 1024 / 1024) | round(2) }} MB)</span>
+                </div>
+                <img src="/admin/evidence/{{ sub.id }}/{{ ev.id }}" alt="{{ ev.original_filename }}" style="max-width: 400px; border-radius: 4px; border: 1px solid #ddd;" />
+              {% if ev.description %}
+              <div class="mt-2" style="font-size: 13px; padding: 8px; background: #f0f7ff; border-radius: 4px; border-left: 3px solid #007acc;">
+                <strong>用户说明:</strong> {{ ev.description }}
+              </div>
+              {% endif %}
+            </div>
+            {% endif %}
+          {% endfor %}
+          
+          {# 然后显示视频类型的证据 #}
+          {% for ev in sub.evidences %}
+            {% if ev.category in ['video', 'chat_video'] %}
+            <div class="mt-8" style="border: 1px solid #dee2e6; border-radius: 8px; padding: 12px;">
+                <div style="margin-bottom: 8px;">
+                  <strong>视频文件:</strong> {{ ev.original_filename }}
+                  <span class="muted" style="margin-left: 8px;">({{ (ev.file_size / 1024 / 1024) | round(2) }} MB)</span>
+                </div>
+                <video controls style="max-width: 400px; border-radius: 4px;">
+                  <source src="/admin/evidence/{{ sub.id }}/{{ ev.id }}" type="{{ ev.mime_type or 'video/mp4' }}" />
+                  您的浏览器不支持视频播放。
+                </video>
+              {% if ev.description %}
+              <div class="mt-2" style="font-size: 13px; padding: 8px; background: #f0f7ff; border-radius: 4px; border-left: 3px solid #007acc;">
+                <strong>用户说明:</strong> {{ ev.description }}
+              </div>
+              {% endif %}
+            </div>
+            {% endif %}
+          {% endfor %}
+          
+          {# 最后显示文档类型的证据 #}
+          {% for ev in sub.evidences %}
+            {% if ev.category == 'document' %}
+            <div class="mt-8" style="border: 1px solid #dee2e6; border-radius: 8px; padding: 12px;">
+                <div style="margin-bottom: 8px;">
+                  <strong>文档文件:</strong> {{ ev.original_filename }}
+                  <span class="muted" style="margin-left: 8px;">({{ (ev.file_size / 1024 / 1024) | round(2) }} MB)</span>
+                </div>
+                <a href="/admin/evidence/{{ sub.id }}/{{ ev.id }}" target="_blank" class="btn secondary">下载查看文档</a>
+              {% if ev.description %}
+              <div class="mt-2" style="font-size: 13px; padding: 8px; background: #f0f7ff; border-radius: 4px; border-left: 3px solid #007acc;">
+                <strong>用户说明:</strong> {{ ev.description }}
+              </div>
+              {% endif %}
+            </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="muted">无证据文件</p>
+      {% endif %}
+    </div>
+
+    <div class="mt-16">
+      <label for="note">管理员备注</label>
+      <textarea id="note" name="note" rows="3">{{ sub.admin_notes or '' }}</textarea>
+    </div>
+
+    <!-- 评论管理区域 -->
+    <div class="mt-24">
+      <h3 style="margin-bottom: 16px; color: var(--nyu-purple);">评论管理</h3>
+      <div id="admin-comments-container">
+        <div id="admin-comments-loading" style="text-align: center; padding: 20px; color: #6c757d;">
+          正在加载评论...
+        </div>
+        <div id="admin-comments-list" style="display: none;">
+        </div>
+        <div id="admin-comments-empty" style="display: none; text-align: center; padding: 20px; color: #6c757d;">
+          暂无评论
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-16">
+      <button class="btn" name="action" value="update" type="submit">保存</button>
+      <button class="btn" name="action" value="approve" type="submit">通过</button>
+      <button class="btn warning" name="action" value="reject" type="submit">拒绝</button>
+      <button class="btn secondary" name="action" value="hide" type="submit">隐藏</button>
+      <button class="btn secondary" name="action" value="flag_toggle" type="submit">标记/取消标记</button>
+      <button class="btn danger" name="action" value="delete" type="submit" onclick="return confirm('确定删除？')">删除</button>
+      <a class="btn secondary" href="/admin">返回</a>
+    </div>
+  </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const submissionId = {{ sub.id }};
+    const adminCommentsLoading = document.getElementById('admin-comments-loading');
+    const adminCommentsList = document.getElementById('admin-comments-list');
+    const adminCommentsEmpty = document.getElementById('admin-comments-empty');
+    
+    // 渲染管理员评论（递归处理回复）
+    function renderAdminComment(comment, level = 0) {
+        const marginLeft = level * 20;
+        const borderLeftColor = level > 0 ? '#007bff' : 'transparent';
+        const backgroundColor = comment.deleted ? '#f8f9fa' : (level > 0 ? '#f5f5f5' : '#ffffff');
+        
+        const statusBadge = getStatusBadge(comment.status);
+        const deletedBadge = comment.deleted ? '<span class="badge" style="background: #dc3545; color: white; margin-left: 8px;">已删除</span>' : '';
+        const parentInfo = level > 0 ? '<span class="badge" style="background: #17a2b8; color: white; margin-left: 8px;">回复</span>' : '';
+        const deleteBtn = comment.deleted ? 
+            '' : 
+            `<button class="btn danger" style="font-size: 12px; padding: 4px 8px; margin-left: 8px;" onclick="deleteComment(${comment.id})">删除</button>`;
+        
+        let html = `
+            <div class="admin-comment-item" style="
+                border: 1px solid #dee2e6; 
+                border-radius: 8px; 
+                padding: 16px; 
+                margin-bottom: 16px; 
+                margin-left: ${marginLeft}px;
+                background: ${backgroundColor};
+                border-left: 3px solid ${borderLeftColor};
+                ${comment.deleted ? 'opacity: 0.7;' : ''}
+            ">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                    <div>
+                        <span style="font-size: 12px; color: #6c757d;">评论 #${comment.id}</span>
+                        ${statusBadge}
+                        ${parentInfo}
+                        ${deletedBadge}
+                    </div>
+                    <div>
+                        <span style="font-size: 12px; color: #6c757d;">${comment.created_at}</span>
+                        ${deleteBtn}
+                    </div>
+                </div>
+                
+                <div class="comment-content" style="
+                    line-height: 1.6; 
+                    margin-bottom: 12px;
+                    padding: 12px;
+                    background: #f8f9fa;
+                    border-radius: 6px;
+                ">${escapeHtml(comment.content)}</div>
+                
+                ${comment.client_notice ? `
+                    <div style="
+                        font-size: 13px; 
+                        color: #856404; 
+                        background: #fff3cd; 
+                        padding: 8px 12px; 
+                        border-radius: 4px; 
+                        border-left: 3px solid #ffc107;
+                    ">
+                        <strong>审核未通过原因：</strong>${comment.client_notice}
+                    </div>
+                ` : ''}
+            </div>
+        `;
+        
+        // 递归渲染回复
+        if (comment.replies && comment.replies.length > 0) {
+            comment.replies.forEach(reply => {
+                html += renderAdminComment(reply, level + 1);
+            });
+        }
+        
+        return html;
+    }
+    
+    // 加载管理员评论列表
+    function loadAdminComments() {
+        fetch(`/api/admin/comments/${submissionId}`, {
+            credentials: 'include'
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                adminCommentsLoading.style.display = 'none';
+                
+                if (data.comments && data.comments.length > 0) {
+                    adminCommentsList.style.display = 'block';
+                    adminCommentsEmpty.style.display = 'none';
+                    
+                    let commentsHtml = '';
+                    data.comments.forEach(comment => {
+                        commentsHtml += renderAdminComment(comment);
+                    });
+                    adminCommentsList.innerHTML = commentsHtml;
+                } else {
+                    adminCommentsList.style.display = 'none';
+                    adminCommentsEmpty.style.display = 'block';
+                }
+            })
+            .catch(error => {
+                console.error('加载管理员评论失败:', error);
+                adminCommentsLoading.innerHTML = '<div style="color: #dc3545;">加载评论失败，请刷新重试</div>';
+            });
+    }
+    
+    // 获取状态标志
+    function getStatusBadge(status) {
+        const badges = {
+            'pending': '<span class="badge" style="background: #ffc107; color: #000;">待审核</span>',
+            'approved': '<span class="badge" style="background: #28a745; color: white;">已通过</span>',
+            'rejected': '<span class="badge" style="background: #dc3545; color: white;">已拒绝</span>'
+        };
+        return badges[status] || '<span class="badge">未知状态</span>';
+    }
+    
+    // HTML转义函数
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML.replace(/\n/g, '<br>');
+    }
+    
+    // 删除评论
+    window.deleteComment = function(commentId) {
+        if (!confirm('确定要删除这条评论吗？此操作不可撤销。')) {
+            return;
+        }
+        
+        fetch(`/api/admin/comments/${commentId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include'
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                // 重新加载评论列表
+                loadAdminComments();
+                
+                // 显示成功提示
+                const successMsg = document.createElement('div');
+                successMsg.style.cssText = 'position: fixed; top: 20px; right: 20px; background: #d4edda; color: #155724; padding: 12px 20px; border: 1px solid #c3e6cb; border-radius: 6px; z-index: 1000;';
+                successMsg.textContent = data.message || '评论已删除';
+                document.body.appendChild(successMsg);
+                setTimeout(() => document.body.removeChild(successMsg), 3000);
+            } else {
+                alert('删除失败: ' + (data.error || '未知错误'));
+            }
+        })
+        .catch(error => {
+            console.error('删除评论失败:', error);
+            alert('删除失败，请稍后重试');
+        });
+    };
+    
+    // 页面加载时获取评论
+    loadAdminComments();
+});
+</script>
+{% endblock %}

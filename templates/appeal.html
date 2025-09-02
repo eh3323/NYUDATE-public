@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="hero">
+  <h1>申诉记录</h1>
+  <p class="text-secondary">针对：{{ (sub.professor_cn_name or '') ~ ' ' ~ (sub.professor_en_name or '') }}。请准确描述您的主张、证据与期望处理方式。</p>
+</div>
+
+<div class="container-narrow">
+  <div class="card">
+    <form action="/appeal/{{ sub.id }}" method="post" enctype="multipart/form-data">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+      
+      <div class="form-group">
+        <label for="email">您的邮箱（必填）</label>
+        <input id="email" type="email" name="email" required placeholder="you@example.com" />
+      </div>
+      
+      <div class="form-group">
+        <label for="reason">申诉理由（必填）</label>
+        <textarea id="reason" name="reason" rows="8" required placeholder="请详细说明您对该记录的意见、希望纠正的信息，以及期望的处理方式"></textarea>
+      </div>
+
+      <!-- 申诉证据区域 -->
+      <div class="form-group">
+        <h3 style="margin-bottom: 16px; font-size: 18px;">申诉证据（可选）</h3>
+        <p class="text-secondary" style="margin-bottom: 20px; font-size: 14px;">
+          请将所有支持您申诉的证据材料上传到 Google Drive，设置为"任何人都可查看"，然后提供链接。
+        </p>
+        
+        <!-- Google Drive 链接 -->
+        <div style="margin-bottom: 24px;">
+          <label for="evidence_drive_link" style="font-weight: 600; margin-bottom: 8px; display: block;">Google Drive 证据链接</label>
+          <p class="text-light" style="font-size: 13px; margin-bottom: 12px;">
+            包含所有证据文件的 Google Drive 文件夹或单个文件链接
+          </p>
+          <input type="url" id="evidence_drive_link" name="evidence_drive_link" placeholder="https://drive.google.com/drive/folders/..." style="margin-bottom: 16px;">
+          
+          <div style="margin-bottom: 16px;">
+            <label for="evidence_description" style="font-size: 14px; font-weight: 500;">证据说明</label>
+            <textarea id="evidence_description" name="evidence_description" rows="3" placeholder="请简要说明 Google Drive 中包含哪些证据文件，以及它们如何支持您的申诉"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert alert-warning">
+        <div class="alert-content">
+          <strong>重要要求</strong>
+          <ul style="margin: 8px 0 0; padding-left: 20px; font-size: 14px;">
+            <li style="margin-bottom: 4px;">必须包含<strong>证明您本人身份</strong>的材料（如学生证、身份证等）</li>
+            <li style="margin-bottom: 4px;">Google Drive 链接必须设置为"任何人都可查看"权限</li>
+            <li style="margin-bottom: 4px;">所有证据文件应清晰可读，支持您的申诉理由</li>
+            <li>请勿包含与申诉无关的个人敏感信息</li>
+          </ul>
+        </div>
+      </div>
+    {% if config.TURNSTILE_SITE_KEY %}
+    <div class="mt-3" style="display:flex; justify-content:center;">
+      <div class="cf-turnstile" data-sitekey="{{ config.TURNSTILE_SITE_KEY }}" data-theme="auto" data-size="normal" data-callback="onTsOkAppeal"></div>
+    </div>
+    <script>
+      let __tsRetryAppeal = false;
+      let __tsAppealTs = 0;
+      function onTsOkAppeal(token){
+        const form = document.querySelector('form[action^="/appeal/"]');
+        if(!form) return;
+        let hidden = form.querySelector('input[name="cf-turnstile-response"]');
+        if(!hidden){
+          hidden = document.createElement('input');
+          hidden.type = 'hidden';
+          hidden.name = 'cf-turnstile-response';
+          form.appendChild(hidden);
+        }
+        hidden.value = token || '';
+        __tsAppealTs = Date.now();
+      }
+      window.addEventListener('load', () => {
+        const form = document.querySelector('form[action^="/appeal/"]');
+        if(!form) return;
+        form.addEventListener('submit', (e) => {
+          let h = form.querySelector('input[name="cf-turnstile-response"]');
+          if(!h){ h = document.createElement('input'); h.type='hidden'; h.name='cf-turnstile-response'; h.value=''; form.appendChild(h); }
+          const token = h.value.trim();
+          const tooOld = __tsAppealTs && (Date.now() - __tsAppealTs > 90*1000);
+          if(!token){ e.preventDefault(); alert('请先完成人机验证'); return false; }
+          if(tooOld){ e.preventDefault(); try{ if(window.turnstile) turnstile.reset(); }catch(_){} alert('人机验证已过期，请重新勾选'); return false; }
+        }, { capture: true });
+      });
+    </script>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    {% endif %}
+    <div class="mt-16">
+      <button class="btn" type="submit">提交申诉</button>
+      <a class="btn secondary" href="/">返回</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

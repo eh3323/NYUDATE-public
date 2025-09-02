@@ -1,0 +1,254 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card">
+  <h2>管理员仪表盘</h2>
+  <form action="/admin" method="get" class="mt-16">
+    <div class="row">
+      <div>
+        <label>状态筛选</label>
+        <select name="status">
+          <option value="">全部</option>
+          <option value="pending" {% if request.args.get('status')=='pending' %}selected{% endif %}>待审核</option>
+          <option value="approved" {% if request.args.get('status')=='approved' %}selected{% endif %}>已通过</option>
+          <option value="rejected" {% if request.args.get('status')=='rejected' %}selected{% endif %}>已拒绝</option>
+          <option value="hidden" {% if request.args.get('status')=='hidden' %}selected{% endif %}>隐藏</option>
+        </select>
+      </div>
+      <div>
+        <label>关键字</label>
+          <input type="text" name="q" value="{{ request.args.get('q','') }}" placeholder="TA的姓名、唯一标识、邮箱、描述" />
+      </div>
+    </div>
+    <div class="mt-16">
+      <button class="btn" type="submit">筛选</button>
+      <a class="btn secondary" href="/admin/appeals">
+        查看申诉
+        {% if pending_appeals_count > 0 %}
+          <span class="badge badge-warning">{{ pending_appeals_count }}</span>
+        {% endif %}
+      </a>
+      <a class="btn secondary" href="/admin/logout">退出</a>
+    </div>
+  </form>
+</div>
+
+<!-- 批量操作工具栏 -->
+<div class="card mt-16" id="bulk-toolbar" style="display: none; background: #f8f9fa; border: 2px solid #6366f1;">
+  <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+    <div>
+      <span style="font-weight: 600; color: #6366f1;">已选择 <span id="selected-count">0</span> 项</span>
+    </div>
+    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+      <button type="button" class="btn secondary" onclick="bulkAction('approve')" style="background: #10b981; color: white;">批量通过</button>
+      <button type="button" class="btn secondary" onclick="bulkAction('reject')" style="background: #ef4444; color: white;">批量拒绝</button>
+      <button type="button" class="btn secondary" onclick="bulkAction('delete')" style="background: #dc2626; color: white;">批量删除</button>
+      <button type="button" class="btn" onclick="clearSelection()">取消选择</button>
+    </div>
+  </div>
+</div>
+
+<div class="card mt-16">
+  {% if submissions and submissions|length > 0 %}
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 40px;">
+          <input type="checkbox" id="select-all" onchange="toggleSelectAll(this)" style="cursor: pointer;" />
+        </th>
+        <th>ID</th>
+        <th>TA的姓名</th>
+        <th>提交者</th>
+        <th>状态</th>
+        <th>标签</th>
+        <th>时间</th>
+        <th>标记</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for s in submissions %}
+        <tr data-submission-id="{{ s.id }}">
+          <td>
+            <input type="checkbox" class="submission-checkbox" value="{{ s.id }}" onchange="updateSelection()" style="cursor: pointer;" />
+          </td>
+          <td>{{ s.id }}</td>
+          <td>
+            {{ s.professor_cn_name or '' }}<br />
+            <span class="muted">{{ s.professor_en_name or '' }} · {{ s.professor_unique_identifier or '-' }}</span>
+          </td>
+          <td>{{ s.submitter_email }}</td>
+          <td>{{ s.status }}</td>
+          <td>
+            {% if s.tag_positive %}<span class="badge tag-yes">积极</span>{% endif %}
+            {% if s.tag_calm %}<span class="badge tag-yes">沉稳</span>{% endif %}
+            {% if s.tag_leadership %}<span class="badge tag-yes">PUA</span>{% endif %}
+            {% if s.tag_homework_heavy %}<span class="badge tag-yes">骗钱</span>{% endif %}
+            {% if s.tag_custom %}<span class="badge">{{ s.tag_custom }}</span>{% endif %}
+          </td>
+          <td>{{ s.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+          <td>{% if s.flagged %}<span class="flag">已标记</span>{% else %}<span class="muted">-</span>{% endif %}</td>
+          <td>
+            <a class="btn secondary" href="/admin/submission/{{ s.id }}">详情</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+    <p class="muted">暂无数据</p>
+  {% endif %}
+</div>
+
+<script>
+let selectedSubmissions = new Set();
+
+
+function updateSelection() {
+  const checkboxes = document.querySelectorAll('.submission-checkbox');
+  const checkedBoxes = document.querySelectorAll('.submission-checkbox:checked');
+  
+  selectedSubmissions.clear();
+  checkedBoxes.forEach(cb => selectedSubmissions.add(parseInt(cb.value)));
+  
+  document.getElementById('selected-count').textContent = selectedSubmissions.size;
+  
+  const toolbar = document.getElementById('bulk-toolbar');
+  if (selectedSubmissions.size > 0) {
+    toolbar.style.display = 'block';
+  } else {
+    toolbar.style.display = 'none';
+  }
+  
+  // 更新全选按钮状态
+  const selectAllCheckbox = document.getElementById('select-all');
+  if (checkedBoxes.length === checkboxes.length && checkboxes.length > 0) {
+    selectAllCheckbox.checked = true;
+    selectAllCheckbox.indeterminate = false;
+  } else if (checkedBoxes.length > 0) {
+    selectAllCheckbox.checked = false;
+    selectAllCheckbox.indeterminate = true;
+  } else {
+    selectAllCheckbox.checked = false;
+    selectAllCheckbox.indeterminate = false;
+  }
+}
+
+function toggleSelectAll(selectAllCheckbox) {
+  const checkboxes = document.querySelectorAll('.submission-checkbox');
+  checkboxes.forEach(cb => {
+    cb.checked = selectAllCheckbox.checked;
+  });
+  updateSelection();
+}
+
+function clearSelection() {
+  const checkboxes = document.querySelectorAll('.submission-checkbox');
+  checkboxes.forEach(cb => cb.checked = false);
+  document.getElementById('select-all').checked = false;
+  updateSelection();
+}
+
+function bulkAction(action) {
+  if (selectedSubmissions.size === 0) {
+    alert('请先选择要操作的项目');
+    return;
+  }
+  
+  let actionText = '';
+  let confirmMessage = '';
+  
+  switch(action) {
+    case 'approve':
+      actionText = '批量通过';
+      confirmMessage = `确定要通过选中的 ${selectedSubmissions.size} 个提交吗？`;
+      break;
+    case 'reject':
+      actionText = '批量拒绝';
+      confirmMessage = `确定要拒绝选中的 ${selectedSubmissions.size} 个提交吗？`;
+      break;
+    case 'delete':
+      actionText = '批量删除';
+      confirmMessage = `⚠️ 确定要删除选中的 ${selectedSubmissions.size} 个提交吗？此操作不可恢复！`;
+      break;
+  }
+  
+  if (!confirm(confirmMessage)) {
+    return;
+  }
+  
+  // 禁用所有批量操作按钮
+  const bulkButtons = document.querySelectorAll('#bulk-toolbar button');
+  bulkButtons.forEach(btn => {
+    btn.disabled = true;
+    if (btn.textContent.includes(actionText)) {
+      btn.textContent = '处理中...';
+    }
+  });
+  
+  const submissionIds = Array.from(selectedSubmissions);
+  
+  fetch('/admin/bulk-action', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Requested-With': 'XMLHttpRequest'
+    },
+    body: JSON.stringify({
+      action: action,
+      submission_ids: submissionIds
+    })
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+    return response.json();
+  })
+  .then(data => {
+    if (data.success) {
+      alert(`${actionText}成功！已处理 ${data.processed_count} 个项目`);
+      
+      // 如果是删除操作，从页面移除已删除的行
+      if (action === 'delete') {
+        submissionIds.forEach(id => {
+          const row = document.querySelector(`tr[data-submission-id="${id}"]`);
+          if (row) {
+            row.remove();
+          }
+        });
+      }
+      
+      // 清空选择
+      clearSelection();
+      
+      // 刷新页面以显示最新状态
+      if (action !== 'delete') {
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      }
+    } else {
+      alert(`${actionText}失败：${data.message || '未知错误'}`);
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert(`${actionText}失败：网络错误`);
+  })
+  .finally(() => {
+    // 恢复按钮状态
+    bulkButtons.forEach(btn => {
+      btn.disabled = false;
+    });
+    document.querySelector('button[onclick="bulkAction(\'approve\')"]').textContent = '批量通过';
+    document.querySelector('button[onclick="bulkAction(\'reject\')"]').textContent = '批量拒绝';
+    document.querySelector('button[onclick="bulkAction(\'delete\')"]').textContent = '批量删除';
+  });
+}
+
+// 页面加载完成后初始化
+document.addEventListener('DOMContentLoaded', function() {
+  updateSelection();
+});
+</script>
+{% endblock %}

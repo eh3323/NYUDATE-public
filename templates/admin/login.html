@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card" style="max-width:520px; margin: 0 auto;">
+  <h2>管理员登录</h2>
+  <form action="/admin/login" method="post" class="mt-16">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    <div class="form-group">
+      <label for="password">密码</label>
+      <input type="password" id="password" name="password" required />
+    </div>
+    <div class="mt-3">
+      <button class="btn btn-primary" type="submit">登录</button>
+      <a class="btn btn-secondary" href="/">返回</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

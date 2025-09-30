@@ -1,0 +1,770 @@
+{
+  "nav": {
+    "home": {
+      "zh": "首页",
+      "en": "Home"
+    },
+    "upload": {
+      "zh": "上传评价",
+      "en": "Submit Review"
+    },
+    "admin": {
+      "zh": "管理员",
+      "en": "Admin"
+    }
+  },
+  "hero": {
+    "title": {
+      "zh": "NYU Dating Copilot",
+      "en": "NYU Dating Copilot"
+    },
+    "subtitle": {
+      "zh": "前车之鉴,近在眼前",
+      "en": "Learn from others' experiences"
+    },
+    "search_placeholder": {
+      "zh": "TA的中文全名/英文全名",
+      "en": "Full Name (Chinese/English)"
+    },
+    "contribute": {
+      "zh": "贡献评价",
+      "en": "Contribute Review"
+    },
+    "stats": {
+      "zh": "已收录 <strong>%d</strong> 条评价 · 上次更新：%s",
+      "en": "<strong>%d</strong> reviews collected · Last updated: %s"
+    },
+    "disclaimer": {
+      "zh": "点击\"搜索\"即表示您理解：结果可能指向真实个人；内容为用户主观意见,准确性与完整性不作保证。",
+      "en": "By clicking 'Search', you understand: results may refer to real individuals; content represents user opinions and accuracy is not guaranteed."
+    }
+  },
+  "mission": {
+    "title": {
+      "zh": "我们的使命",
+      "en": "Our Mission"
+    },
+    "subtitle": {
+      "zh": "吃饭这种小事,我们都会提前去大众点评看看评价,约会前为什么不也这样呢?<br>分享您的Dating点评,获得极致的隐私保护,浏览经过审查的反馈。",
+      "en": "We check reviews before dining out - why not before dating?<br>Share your dating experiences with ultimate privacy protection, browse verified feedback."
+    },
+    "feature1_title": {
+      "zh": "精准可靠",
+      "en": "Accurate & Reliable"
+    },
+    "feature1_desc": {
+      "zh": "基于个人经历的主观评价；设有严谨的证据审核流程。",
+      "en": "Personal experience-based reviews with rigorous evidence verification."
+    },
+    "feature2_title": {
+      "zh": "隐私保护",
+      "en": "Privacy Protected"
+    },
+    "feature2_desc": {
+      "zh": "敏感信息自动去除,尊重个人边界与合规要求",
+      "en": "Automatic removal of sensitive info, respecting privacy and compliance."
+    },
+    "feature3_title": {
+      "zh": "高效简洁",
+      "en": "Fast & Simple"
+    },
+    "feature3_desc": {
+      "zh": "最快30分钟极速审核,无广告,无推送",
+      "en": "Review in as fast as 30 minutes, no ads, no notifications"
+    },
+    "privacy_notice_title": {
+      "zh": "隐私提示",
+      "en": "Privacy Notice"
+    },
+    "privacy_notice_1": {
+      "zh": "首页与浏览页不主动公开姓名；仅展示描述与经隐私化处理的证据缩略图。",
+      "en": "Names are not publicly displayed on homepage; only descriptions and privacy-processed thumbnails are shown."
+    },
+    "privacy_notice_2": {
+      "zh": "仅在精准姓名匹配搜索结果中出现全名；不提供联想、模糊或部分匹配。",
+      "en": "Full names only appear in exact search results; no suggestions, fuzzy or partial matches."
+    },
+    "privacy_notice_3": {
+      "zh": "所有提交先由系统进行敏感信息遮盖与安全检查,随后进入人工复核。",
+      "en": "All submissions undergo automatic sensitive data masking and security checks, followed by manual review."
+    }
+  },
+  "featured": {
+    "title": {
+      "zh": "NYU 甄选",
+      "en": "Featured Reviews"
+    },
+    "subtitle": {
+      "zh": "仅展示部分精选内容",
+      "en": "Curated content only"
+    },
+    "view_details": {
+      "zh": "查看详情 →",
+      "en": "View Details →"
+    },
+    "show_more": {
+      "zh": "显示更多",
+      "en": "Show More"
+    },
+    "no_content": {
+      "zh": "暂无精选内容",
+      "en": "No featured content yet"
+    },
+    "no_content_desc": {
+      "zh": "上传评价时可勾选\"展示到首页\",帮助其他同学更好地了解TA的情况。",
+      "en": "You can check 'Display on homepage' when submitting to help others learn about them."
+    }
+  },
+  "search": {
+    "results_title": {
+      "zh": "搜索结果：%s",
+      "en": "Search Results: %s"
+    },
+    "found_results": {
+      "zh": "找到 %d 条相关记录",
+      "en": "Found %d related records"
+    },
+    "no_results": {
+      "zh": "未找到匹配的结果",
+      "en": "No matching results found"
+    },
+    "no_results_desc": {
+      "zh": "请输入完整的姓名进行搜索。例如：搜索\"张三\"或\"Peter Parker\",而不是\"张\"或\"Peter\"。",
+      "en": "Please enter the full name. For example: search for '张三' or 'Peter Parker', not '张' or 'Peter'."
+    },
+    "back_home": {
+      "zh": "返回首页",
+      "en": "Back to Home"
+    },
+    "course": {
+      "zh": "课程：%s",
+      "en": "Course: %s"
+    }
+  },
+  "tags": {
+    "loyal": {
+      "zh": "忠诚",
+      "en": "Loyal"
+    },
+    "stable": {
+      "zh": "情绪稳定",
+      "en": "Emotionally Stable"
+    },
+    "sincere": {
+      "zh": "真诚付出",
+      "en": "Sincere"
+    },
+    "humorous": {
+      "zh": "幽默",
+      "en": "Humorous"
+    },
+    "cheating": {
+      "zh": "出轨",
+      "en": "Cheating"
+    },
+    "cold_violence": {
+      "zh": "冷暴力",
+      "en": "Silent Treatment"
+    },
+    "pua": {
+      "zh": "PUA",
+      "en": "PUA"
+    },
+    "money": {
+      "zh": "骗钱",
+      "en": "Financial Scam"
+    }
+  },
+  "footer": {
+    "brand_desc": {
+      "zh": "独立约会评价平台",
+      "en": "Independent Dating Review Platform"
+    },
+    "disclaimer": {
+      "zh": "<strong>重要声明：</strong>本项目与纽约大学(NYU)或任何教育机构无关联。",
+      "en": "<strong>Important Notice:</strong> This project is not affiliated with New York University (NYU) or any educational institution."
+    },
+    "quick_nav": {
+      "zh": "快速导航",
+      "en": "Quick Links"
+    },
+    "search_records": {
+      "zh": "搜索记录",
+      "en": "Search Records"
+    },
+    "submit_review": {
+      "zh": "提交评价",
+      "en": "Submit Review"
+    },
+    "legal_docs": {
+      "zh": "法律文档",
+      "en": "Legal Documents"
+    },
+    "terms": {
+      "zh": "服务条款",
+      "en": "Terms of Service"
+    },
+    "privacy": {
+      "zh": "隐私政策",
+      "en": "Privacy Policy"
+    },
+    "appeal": {
+      "zh": "申诉流程",
+      "en": "Appeal Process"
+    },
+    "contact": {
+      "zh": "联系支持",
+      "en": "Contact & Support"
+    },
+    "support_links": {
+      "zh": "技术支持 ·加入我们 · 意见反馈",
+      "en": "Tech Support · Join Us · Feedback"
+    },
+    "copyright": {
+      "zh": "© 2025 NYU Date · All Rights Reserved",
+      "en": "© 2025 NYU Date · All Rights Reserved"
+    },
+    "content_disclaimer": {
+      "zh": "内容由用户提交,仅供参考,不构成事实陈述或建议。详见《服务条款》与《隐私政策》。",
+      "en": "User-submitted content for reference only. Not factual statements or advice. See Terms & Privacy Policy."
+    }
+  },
+  "upload": {
+    "page_title": {
+      "zh": "提交您的评价",
+      "en": "Submit Your Review"
+    },
+    "page_subtitle": {
+      "zh": "请基于您的真实经历进行评价。提交后将AI预审后进入人工审核流程；提交通常在约 30 分钟内处理。",
+      "en": "Please submit based on your real experiences. Submissions will be AI pre-reviewed then manually reviewed; usually processed within 30 minutes."
+    },
+    "contact_info": {
+      "zh": "联系信息",
+      "en": "Contact Information"
+    },
+    "your_email": {
+      "zh": "您的邮箱",
+      "en": "Your Email"
+    },
+    "email_hint": {
+      "zh": "仅用于与您联系与通知进度",
+      "en": "Only for contact and progress updates"
+    },
+    "ta_info": {
+      "zh": "TA的信息",
+      "en": "Their Information"
+    },
+    "cn_name": {
+      "zh": "TA的中文名",
+      "en": "Chinese Name (If Applicable)"
+    },
+    "en_name": {
+      "zh": "TA的英文全名",
+      "en": "English Full Name"
+    },
+    "name_hint": {
+      "zh": "我们仅在精准姓名匹配搜索时显示全名",
+      "en": "We only show full names in exact name search results"
+    },
+    "review_content": {
+      "zh": "评价内容",
+      "en": "Review Content"
+    },
+    "tag_selection": {
+      "zh": "标签选择",
+      "en": "Tag Selection"
+    },
+    "description": {
+      "zh": "详细描述",
+      "en": "Detailed Description"
+    },
+    "description_placeholder": {
+      "zh": "请描述您个人的真实经历，避免无端指控和任何隐私信息。推荐包含新闻六要素：时间、地点、人物（使用代称）、起因、经过、结果。",
+      "en": "Please describe your personal real experience, avoid baseless accusations and any privacy info. Recommended to include: time, place, people (use aliases), cause, process, result."
+    },
+    "evidence_title": {
+      "zh": "证据材料（推荐）",
+      "en": "Evidence Materials (Recommended)"
+    },
+    "privacy_protection": {
+      "zh": "隐私保护提示",
+      "en": "Privacy Protection Notice"
+    },
+    "privacy_hint": {
+      "zh": "系统将对证据文件进行充分模糊化处理；原始文件仅供审核使用，对外不可访问。",
+      "en": "System will thoroughly blur evidence files; original files are for review only and not publicly accessible."
+    },
+    "evidence_files": {
+      "zh": "证据文件",
+      "en": "Evidence Files"
+    },
+    "drag_drop_hint": {
+      "zh": "点击或拖拽文件到此处",
+      "en": "Click or drag files here"
+    },
+    "file_types_hint": {
+      "zh": "支持文档、图片、视频（如：PDF、JPG、PNG、MP4）",
+      "en": "Supports documents, images, videos (e.g., PDF, JPG, PNG, MP4)"
+    },
+    "evidence_description_required": {
+      "zh": "证据说明（必填）",
+      "en": "Evidence Description (Required)"
+    },
+    "evidence_placeholder": {
+      "zh": "请简要说明此证据的内容和相关性...",
+      "en": "Please briefly describe the content and relevance of this evidence..."
+    },
+    "remove": {
+      "zh": "移除",
+      "en": "Remove"
+    },
+    "add_more_files": {
+      "zh": "+ 添加更多文件",
+      "en": "+ Add More Files"
+    },
+    "files_selected": {
+      "zh": "已选 %d 个文件",
+      "en": "%d files selected"
+    },
+    "privacy_settings": {
+      "zh": "隐私设置",
+      "en": "Privacy Settings"
+    },
+    "display_homepage": {
+      "zh": "展示到首页",
+      "en": "Display on Homepage"
+    },
+    "display_homepage_desc": {
+      "zh": "您的评价将可能出现在首页精选展示中（姓名会被保护）",
+      "en": "Your review may appear in homepage featured display (name will be protected)"
+    },
+    "legal_agreement": {
+      "zh": "法律条款同意",
+      "en": "Legal Agreement"
+    },
+    "legal_agreement_desc": {
+      "zh": "我已阅读并同意",
+      "en": "I have read and agree to"
+    },
+    "verification_hint": {
+      "zh": "人机验证将在勾选法律条款同意后自动加载",
+      "en": "Human verification will load automatically after agreeing to legal terms"
+    },
+    "submit_review_btn": {
+      "zh": "提交评价",
+      "en": "Submit Review"
+    },
+    "back_home_btn": {
+      "zh": "返回首页",
+      "en": "Back to Home"
+    },
+    "ai_reviewing": {
+      "zh": "AI预审核中...",
+      "en": "AI Pre-reviewing..."
+    },
+    "uploading": {
+      "zh": "上传中...",
+      "en": "Uploading..."
+    },
+    "submit_success": {
+      "zh": "提交成功",
+      "en": "Submitted Successfully"
+    },
+    "content_needs_adjustment": {
+      "zh": "内容需要调整",
+      "en": "Content Needs Adjustment"
+    },
+    "accept_suggestion": {
+      "zh": "采用建议",
+      "en": "Accept Suggestion"
+    },
+    "manual_edit": {
+      "zh": "手动修改",
+      "en": "Edit Manually"
+    },
+    "suggested_rewrite": {
+      "zh": "建议改写",
+      "en": "Suggested Rewrite"
+    },
+    "review_failed": {
+      "zh": "⚠️ 审核不通过，请修改后重新提交",
+      "en": "⚠️ Review failed, please modify and resubmit"
+    },
+    "and": {
+      "zh": "和",
+      "en": "and"
+    }
+  },
+  "detail": {
+    "page_title": {
+      "zh": "记录详情",
+      "en": "Record Details"
+    },
+    "page_subtitle": {
+      "zh": "本页展示经审核的用户提交内容。内容为用户主观意见，准确性与完整性不作保证。",
+      "en": "This page shows user-submitted content that has been reviewed. Content represents user opinions and accuracy is not guaranteed."
+    },
+    "basic_info": {
+      "zh": "基本信息",
+      "en": "Basic Information"
+    },
+    "ta_name": {
+      "zh": "TA的名字：",
+      "en": "Their Name:"
+    },
+    "tags_label": {
+      "zh": "标签：",
+      "en": "Tags:"
+    },
+    "description_label": {
+      "zh": "描述",
+      "en": "Description"
+    },
+    "evidence_thumbnails": {
+      "zh": "证据缩略图",
+      "en": "Evidence Thumbnails"
+    },
+    "privacy_notice_title": {
+      "zh": "隐私保护说明",
+      "en": "Privacy Protection Notice"
+    },
+    "privacy_notice_desc": {
+      "zh": "为保护隐私，以下仅显示经过模糊处理的证据缩略图，无法下载原始文件。",
+      "en": "For privacy protection, only blurred evidence thumbnails are shown below, original files cannot be downloaded."
+    },
+    "file": {
+      "zh": "文件:",
+      "en": "File:"
+    },
+    "description": {
+      "zh": "说明:",
+      "en": "Description:"
+    },
+    "video_file": {
+      "zh": "视频文件:",
+      "en": "Video File:"
+    },
+    "document_file": {
+      "zh": "文档文件:",
+      "en": "Document File:"
+    },
+    "evidence_not_public": {
+      "zh": "上传者未开放证据缩略图",
+      "en": "Uploader has not made evidence thumbnails public"
+    },
+    "appeal_hint": {
+      "zh": "提示：如认为该记录存在不准确或权益受损，请使用下方申诉功能。我们将尽快处理。",
+      "en": "Tip: If you believe this record is inaccurate or your rights are affected, please use the appeal function below. We will process it promptly."
+    },
+    "comments_section": {
+      "zh": "评论区",
+      "en": "Comments"
+    },
+    "loading_comments": {
+      "zh": "正在加载评论...",
+      "en": "Loading comments..."
+    },
+    "no_comments": {
+      "zh": "暂无评论",
+      "en": "No comments yet"
+    },
+    "first_comment": {
+      "zh": "快来发表第一条评论吧！",
+      "en": "Be the first to comment!"
+    },
+    "comment_placeholder": {
+      "zh": "请输入您的评论...（最多1000字符）",
+      "en": "Enter your comment... (max 1000 characters)"
+    },
+    "reply_placeholder": {
+      "zh": "请输入回复内容...（最多1000字符）",
+      "en": "Enter your reply... (max 1000 characters)"
+    },
+    "post_comment": {
+      "zh": "发表评论",
+      "en": "Post Comment"
+    },
+    "reply_btn": {
+      "zh": "回复",
+      "en": "Reply"
+    },
+    "cancel_reply": {
+      "zh": "取消回复",
+      "en": "Cancel Reply"
+    },
+    "replying_to": {
+      "zh": "回复:",
+      "en": "Replying to:"
+    },
+    "appeal_btn": {
+      "zh": "申诉",
+      "en": "Appeal"
+    },
+    "back_btn": {
+      "zh": "返回",
+      "en": "Back"
+    },
+    "like_btn_title_like": {
+      "zh": "点赞",
+      "en": "Like"
+    },
+    "like_btn_title_unlike": {
+      "zh": "取消点赞",
+      "en": "Unlike"
+    }
+  },
+  "success": {
+    "page_title": {
+      "zh": "提交成功！",
+      "en": "Submitted Successfully!"
+    },
+    "page_subtitle": {
+      "zh": "您的评价已成功提交并进入审核流程",
+      "en": "Your review has been successfully submitted and entered the review process"
+    },
+    "submission_details": {
+      "zh": "提交详情",
+      "en": "Submission Details"
+    },
+    "ta_info": {
+      "zh": "TA的信息",
+      "en": "Their Information"
+    },
+    "cn_name": {
+      "zh": "中文名：",
+      "en": "Chinese Name:"
+    },
+    "en_name": {
+      "zh": "英文名：",
+      "en": "English Name:"
+    },
+    "birthday": {
+      "zh": "生日：",
+      "en": "Birthday:"
+    },
+    "identifier": {
+      "zh": "标识：",
+      "en": "Identifier:"
+    },
+    "tags": {
+      "zh": "标签",
+      "en": "Tags"
+    },
+    "description_summary": {
+      "zh": "描述摘要",
+      "en": "Description Summary"
+    },
+    "evidence_materials": {
+      "zh": "证据材料",
+      "en": "Evidence Materials"
+    },
+    "next_steps": {
+      "zh": "后续流程",
+      "en": "Next Steps"
+    },
+    "confirmation_email": {
+      "zh": "确认邮件",
+      "en": "Confirmation Email"
+    },
+    "confirmation_desc": {
+      "zh": "正在发送确认邮件到 %s",
+      "en": "Sending confirmation email to %s"
+    },
+    "processing": {
+      "zh": "处理中",
+      "en": "Processing"
+    },
+    "processing_desc": {
+      "zh": "正在生成缩略图，90%%的评价在30分钟内完成审核",
+      "en": "Generating thumbnails, 90%% of reviews are completed within 30 minutes"
+    },
+    "notification": {
+      "zh": "结果通知",
+      "en": "Result Notification"
+    },
+    "notification_desc": {
+      "zh": "处理完成后会邮件通知结果",
+      "en": "Results will be notified by email after processing"
+    },
+    "back_home": {
+      "zh": "返回首页",
+      "en": "Back to Home"
+    },
+    "continue_submit": {
+      "zh": "继续提交",
+      "en": "Continue Submitting"
+    }
+  },
+  "appeal": {
+    "page_title": {
+      "zh": "申诉记录",
+      "en": "Appeal Record"
+    },
+    "page_subtitle_prefix": {
+      "zh": "针对：",
+      "en": "Regarding:"
+    },
+    "page_subtitle_suffix": {
+      "zh": "。请准确描述您的主张、证据与期望处理方式。",
+      "en": ". Please accurately describe your claim, evidence, and expected resolution."
+    },
+    "your_email": {
+      "zh": "您的邮箱（必填）",
+      "en": "Your Email (Required)"
+    },
+    "appeal_reason": {
+      "zh": "申诉理由（必填）",
+      "en": "Appeal Reason (Required)"
+    },
+    "reason_placeholder": {
+      "zh": "请详细说明您对该记录的意见、希望纠正的信息，以及期望的处理方式",
+      "en": "Please detail your opinions on this record, information you wish to correct, and expected resolution"
+    },
+    "appeal_evidence": {
+      "zh": "申诉证据（可选）",
+      "en": "Appeal Evidence (Optional)"
+    },
+    "evidence_hint": {
+      "zh": "请将所有支持您申诉的证据材料上传到 Google Drive，设置为\"任何人都可查看\"，然后提供链接。",
+      "en": "Please upload all evidence supporting your appeal to Google Drive, set to 'Anyone can view', then provide the link."
+    },
+    "drive_link": {
+      "zh": "Google Drive 证据链接",
+      "en": "Google Drive Evidence Link"
+    },
+    "drive_link_hint": {
+      "zh": "包含所有证据文件的 Google Drive 文件夹或单个文件链接",
+      "en": "Google Drive folder or single file link containing all evidence files"
+    },
+    "evidence_description": {
+      "zh": "证据说明",
+      "en": "Evidence Description"
+    },
+    "evidence_desc_placeholder": {
+      "zh": "请简要说明 Google Drive 中包含哪些证据文件，以及它们如何支持您的申诉",
+      "en": "Please briefly describe what evidence files are in Google Drive and how they support your appeal"
+    },
+    "important_requirements": {
+      "zh": "重要要求",
+      "en": "Important Requirements"
+    },
+    "req_identity": {
+      "zh": "必须包含<strong>证明您本人身份</strong>的材料（如学生证、身份证等）",
+      "en": "Must include materials <strong>proving your identity</strong> (e.g., student ID, ID card, etc.)"
+    },
+    "req_permission": {
+      "zh": "Google Drive 链接必须设置为\"任何人都可查看\"权限",
+      "en": "Google Drive link must be set to 'Anyone can view' permission"
+    },
+    "req_clarity": {
+      "zh": "所有证据文件应清晰可读，支持您的申诉理由",
+      "en": "All evidence files should be clear and readable, supporting your appeal reason"
+    },
+    "req_privacy": {
+      "zh": "请勿包含与申诉无关的个人敏感信息",
+      "en": "Do not include personal sensitive information unrelated to the appeal"
+    },
+    "submit_appeal": {
+      "zh": "提交申诉",
+      "en": "Submit Appeal"
+    },
+    "back": {
+      "zh": "返回",
+      "en": "Back"
+    }
+  },
+  "appeal_success": {
+    "received": {
+      "zh": "申诉已收到",
+      "en": "Appeal Received"
+    },
+    "review_message": {
+      "zh": "我们将认真审查您的申诉内容",
+      "en": "We will carefully review your appeal"
+    },
+    "summary": {
+      "zh": "申诉信息摘要",
+      "en": "Appeal Information Summary"
+    },
+    "appeal_id": {
+      "zh": "申诉ID：",
+      "en": "Appeal ID:"
+    },
+    "related_record": {
+      "zh": "相关记录：",
+      "en": "Related Record:"
+    },
+    "submit_time": {
+      "zh": "提交时间：",
+      "en": "Submit Time:"
+    },
+    "contact_email": {
+      "zh": "联系邮箱：",
+      "en": "Contact Email:"
+    },
+    "evidence_provided": {
+      "zh": "证据材料：",
+      "en": "Evidence Materials:"
+    },
+    "drive_link_provided": {
+      "zh": "已提供 Google Drive 链接",
+      "en": "Google Drive link provided"
+    },
+    "process_title": {
+      "zh": "处理流程",
+      "en": "Processing Steps"
+    },
+    "step1_title": {
+      "zh": "申诉审核",
+      "en": "Appeal Review"
+    },
+    "step1_desc": {
+      "zh": "管理员将仔细审查您的申诉理由和 Google Drive 中提供的证据材料",
+      "en": "Admin will carefully review your appeal reason and evidence materials provided in Google Drive"
+    },
+    "step2_title": {
+      "zh": "调查核实",
+      "en": "Investigation"
+    },
+    "step2_desc": {
+      "zh": "如需要，我们可能会联系您获取更多信息或澄清相关细节",
+      "en": "If needed, we may contact you for more information or to clarify relevant details"
+    },
+    "step3_title": {
+      "zh": "邮件通知",
+      "en": "Email Notification"
+    },
+    "step3_desc": {
+      "zh": "处理完成后，我们会第一时间通过邮件通知您审核结果和后续安排",
+      "en": "After processing, we will promptly notify you of the review results and next steps via email"
+    },
+    "expected_time": {
+      "zh": "预期处理时间",
+      "en": "Expected Processing Time"
+    },
+    "time_desc": {
+      "zh": "通常在收到申诉后 <strong>72 小时</strong> 内完成审核",
+      "en": "Usually completed within <strong>72 hours</strong> after receiving the appeal"
+    },
+    "need_help": {
+      "zh": "需要帮助？",
+      "en": "Need Help?"
+    },
+    "help_desc": {
+      "zh": "如果您有任何疑问或需要补充材料，请回复我们发送给您的确认邮件，或者通过以下方式联系我们：",
+      "en": "If you have any questions or need to supplement materials, please reply to our confirmation email, or contact us:"
+    },
+    "email_label": {
+      "zh": "📧 邮箱：",
+      "en": "📧 Email:"
+    },
+    "back_home": {
+      "zh": "返回首页",
+      "en": "Back to Home"
+    },
+    "view_original": {
+      "zh": "查看原记录",
+      "en": "View Original Record"
+    }
+  }
+}

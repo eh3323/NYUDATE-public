@@ -1,9 +1,10 @@
 import os
 import typing
+import json
 from background_tasks import get_task_manager
 import requests
 
-from flask import Flask
+from flask import Flask, request, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail
 from flask_wtf.csrf import CSRFProtect, generate_csrf
@@ -56,6 +57,35 @@ def safe_email_html_filter(text):
     cleaned = bleach.clean(text, tags=allowed_tags, attributes=allowed_attributes, strip=True)
     return cleaned
 
+# Load translations
+with open(os.path.join(os.path.dirname(__file__), 'translations.json'), 'r', encoding='utf-8') as f:
+    TRANSLATIONS = json.load(f)
+
+def get_locale():
+    """Get current language from query parameter or session"""
+    lang = request.args.get('lang')
+    if lang in ['zh', 'en']:
+        session['language'] = lang
+        return lang
+    return session.get('language', 'zh')
+
+def t(key_path, **kwargs):
+    """Translation helper function"""
+    lang = get_locale()
+    keys = key_path.split('.')
+    value = TRANSLATIONS
+    for key in keys:
+        value = value.get(key, {})
+    text = value.get(lang, value.get('zh', key_path))
+
+    # Handle string formatting if kwargs provided
+    if kwargs:
+        try:
+            text = text % tuple(kwargs.values())
+        except:
+            pass
+    return text
+
 # Inject globals into templates
 @app.context_processor
 def inject_globals():
@@ -64,6 +94,8 @@ def inject_globals():
         "VERSION": VERSION,
         "DEPLOY_TIME": DEPLOY_TIME,
         "generate_csrf": generate_csrf,
+        "t": t,
+        "current_lang": get_locale,
     }
 
 # Add security headers for all routes

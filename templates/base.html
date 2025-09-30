@@ -1391,6 +1391,44 @@
   </style>
   
   <script>
+    // Language switcher functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const langButtons = document.querySelectorAll('.lang-btn');
+      const currentLang = localStorage.getItem('language') || 'zh';
+
+      // Set active language button
+      function setActiveLanguage(lang) {
+        langButtons.forEach(btn => {
+          if (btn.dataset.lang === lang) {
+            btn.style.background = 'var(--nyu-purple)';
+            btn.style.color = 'white';
+            btn.style.borderColor = 'var(--nyu-purple)';
+          } else {
+            btn.style.background = 'transparent';
+            btn.style.color = 'var(--text-primary)';
+            btn.style.borderColor = 'var(--border-light)';
+          }
+        });
+      }
+
+      // Initialize active language
+      setActiveLanguage(currentLang);
+
+      // Handle language switch
+      langButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+          const newLang = this.dataset.lang;
+          localStorage.setItem('language', newLang);
+          setActiveLanguage(newLang);
+
+          // Reload page with language parameter
+          const url = new URL(window.location.href);
+          url.searchParams.set('lang', newLang);
+          window.location.href = url.toString();
+        });
+      });
+    });
+
     // Global function for opening legal modal from footer
     window.openLegalModal = function(docType) {
       const url = docType === 'terms' ? '/terms' : '/privacy';
@@ -1492,14 +1530,18 @@
           <span>NYU Date</span>
         </a>
         <nav class="nav-links">
-          <a href="/">首页</a>
-      <a href="/upload">上传评价</a>
+          <a href="/">{{ t('nav.home') }}</a>
+      <a href="/upload">{{ t('nav.upload') }}</a>
     </nav>
       </div>
       <div class="nav-right">
         {% if config.FLASK_ENV == 'development' %}
-        <a href="/admin" class="btn-ghost">管理员</a>
+        <a href="/admin" class="btn-ghost">{{ t('nav.admin') }}</a>
         {% endif %}
+        <div id="language-switcher" style="display: flex; align-items: center; gap: 8px; margin-right: 16px;">
+          <button class="lang-btn" data-lang="zh" style="padding: 6px 12px; border: 1px solid var(--border-light); border-radius: 6px; background: transparent; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.2s ease;">中文</button>
+          <button class="lang-btn" data-lang="en" style="padding: 6px 12px; border: 1px solid var(--border-light); border-radius: 6px; background: transparent; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.2s ease;">EN</button>
+        </div>
         <span class="nav-badge">Beta</span>
       </div>
     </div>
@@ -1522,38 +1564,38 @@
       <div class="footer-grid">
         <div class="footer-section">
           <div class="footer-brand">NYU Date</div>
-          <p style="opacity: 0.9; line-height: 1.6; margin-bottom: 12px;">独立约会评价平台</p>
+          <p style="opacity: 0.9; line-height: 1.6; margin-bottom: 12px;">{{ t('footer.brand_desc') }}</p>
           <p style="opacity: 0.7; font-size: 13px; line-height: 1.5;">
-            <strong>重要声明：</strong>本项目与纽约大学(NYU)或任何教育机构无关联。
+            {{ t('footer.disclaimer') | safe }}
           </p>
         </div>
-        
+
         <div class="footer-section">
-          <h4>快速导航</h4>
-          <a href="/">首页</a>
-          <a href="/">搜索记录</a>
-          <a href="/upload">提交评价</a>
+          <h4>{{ t('footer.quick_nav') }}</h4>
+          <a href="/">{{ t('nav.home') }}</a>
+          <a href="/">{{ t('footer.search_records') }}</a>
+          <a href="/upload">{{ t('footer.submit_review') }}</a>
         </div>
-        
+
         <div class="footer-section">
-          <h4>法律文档</h4>
-          <a href="#" onclick="openLegalModal('terms'); return false;">服务条款</a>
-          <a href="#" onclick="openLegalModal('privacy'); return false;">隐私政策</a>
-          <a href="#" onclick="openLegalModal('terms'); return false;">申诉流程</a>
+          <h4>{{ t('footer.legal_docs') }}</h4>
+          <a href="#" onclick="openLegalModal('terms'); return false;">{{ t('footer.terms') }}</a>
+          <a href="#" onclick="openLegalModal('privacy'); return false;">{{ t('footer.privacy') }}</a>
+          <a href="#" onclick="openLegalModal('terms'); return false;">{{ t('footer.appeal') }}</a>
         </div>
-        
+
         <div class="footer-section">
-          <h4>联系支持</h4>
+          <h4>{{ t('footer.contact') }}</h4>
           <a href="mailto:admin@nyudate.com" style="font-weight: 500;">admin@nyudate.com</a>
           <div style="opacity: 0.8; font-size: 13px; line-height: 1.5; margin-top: 8px;">
-            技术支持 ·加入我们 · 意见反馈
+            {{ t('footer.support_links') }}
           </div>
         </div>
       </div>
       
       <div class="footer-bottom">
-        <div>© 2025 NYU Date · All Rights Reserved</div>
-        <div style="opacity: 0.7;">内容由用户提交，仅供参考，不构成事实陈述或建议。详见《服务条款》与《隐私政策》。</div>
+        <div>{{ t('footer.copyright') }}</div>
+        <div style="opacity: 0.7;">{{ t('footer.content_disclaimer') }}</div>
       </div>
     </div>
   </footer>

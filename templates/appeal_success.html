@@ -6,54 +6,54 @@
       <div style="width: 64px; height: 64px; margin: 0 auto 16px; background: linear-gradient(135deg, var(--nyu-purple) 0%, var(--nyu-purple-dark) 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 28px;">
         ✓
       </div>
-      <h2 style="margin: 0 0 8px; color: var(--text-primary);">申诉已收到</h2>
-      <p class="text-secondary">我们将认真审查您的申诉内容</p>
+      <h2 style="margin: 0 0 8px; color: var(--text-primary);">{{ t('appeal_success.received') }}</h2>
+      <p class="text-secondary">{{ t('appeal_success.review_message') }}</p>
     </div>
-    
+
     <!-- 申诉信息摘要 -->
     <div class="alert alert-info" style="margin-bottom: 24px;">
       <div class="alert-content">
-        <strong>申诉信息摘要</strong>
+        <strong>{{ t('appeal_success.summary') }}</strong>
         <div style="margin-top: 12px; font-size: 14px;">
-          <p><strong>申诉ID：</strong>#{{ appeal.id }}</p>
-          <p><strong>相关记录：</strong>{{ appeal.submission.get_display_name(masked=False) }}</p>
-          <p><strong>提交时间：</strong>{{ appeal.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
-          <p><strong>联系邮箱：</strong>{{ appeal.email }}</p>
+          <p><strong>{{ t('appeal_success.appeal_id') }}</strong>#{{ appeal.id }}</p>
+          <p><strong>{{ t('appeal_success.related_record') }}</strong>{{ appeal.submission.get_display_name(masked=False) }}</p>
+          <p><strong>{{ t('appeal_success.submit_time') }}</strong>{{ appeal.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
+          <p><strong>{{ t('appeal_success.contact_email') }}</strong>{{ appeal.email }}</p>
           {% if appeal.appeal_evidences %}
-          <p><strong>证据材料：</strong>已提供 Google Drive 链接</p>
+          <p><strong>{{ t('appeal_success.evidence_provided') }}</strong>{{ t('appeal_success.drive_link_provided') }}</p>
           {% endif %}
         </div>
       </div>
     </div>
-    
+
     <!-- 处理流程说明 -->
     <div style="margin-bottom: 32px;">
-      <h3 style="font-size: 18px; margin-bottom: 16px;">处理流程</h3>
+      <h3 style="font-size: 18px; margin-bottom: 16px;">{{ t('appeal_success.process_title') }}</h3>
       <div style="display: grid; gap: 16px;">
         <div style="display: flex; gap: 12px; align-items: flex-start;">
           <div style="width: 24px; height: 24px; background: var(--nyu-purple); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; flex-shrink: 0;">1</div>
           <div>
-            <strong>申诉审核</strong>
-            <p style="margin: 4px 0 0; color: var(--text-secondary); font-size: 14px;">管理员将仔细审查您的申诉理由和 Google Drive 中提供的证据材料</p>
+            <strong>{{ t('appeal_success.step1_title') }}</strong>
+            <p style="margin: 4px 0 0; color: var(--text-secondary); font-size: 14px;">{{ t('appeal_success.step1_desc') }}</p>
           </div>
         </div>
         <div style="display: flex; gap: 12px; align-items: flex-start;">
           <div style="width: 24px; height: 24px; background: var(--nyu-purple); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; flex-shrink: 0;">2</div>
           <div>
-            <strong>调查核实</strong>
-            <p style="margin: 4px 0 0; color: var(--text-secondary); font-size: 14px;">如需要，我们可能会联系您获取更多信息或澄清相关细节</p>
+            <strong>{{ t('appeal_success.step2_title') }}</strong>
+            <p style="margin: 4px 0 0; color: var(--text-secondary); font-size: 14px;">{{ t('appeal_success.step2_desc') }}</p>
           </div>
         </div>
         <div style="display: flex; gap: 12px; align-items: flex-start;">
           <div style="width: 24px; height: 24px; background: var(--nyu-purple); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; flex-shrink: 0;">3</div>
           <div>
-            <strong>邮件通知</strong>
-            <p style="margin: 4px 0 0; color: var(--text-secondary); font-size: 14px;">处理完成后，我们会第一时间通过邮件通知您审核结果和后续安排</p>
+            <strong>{{ t('appeal_success.step3_title') }}</strong>
+            <p style="margin: 4px 0 0; color: var(--text-secondary); font-size: 14px;">{{ t('appeal_success.step3_desc') }}</p>
           </div>
         </div>
       </div>
     </div>
-    
+
     <!-- 预期时间 -->
     <div style="background: var(--nyu-purple-pale); border-radius: 12px; padding: 20px; margin-bottom: 24px;">
       <div style="display: flex; align-items: center; gap: 12px;">
@@ -64,27 +64,27 @@
           </svg>
         </div>
         <div>
-          <h4 style="margin: 0; color: var(--nyu-purple-dark);">预期处理时间</h4>
-          <p style="margin: 4px 0 0; color: var(--nyu-purple); font-size: 14px;">通常在收到申诉后 <strong>72 小时</strong> 内完成审核</p>
+          <h4 style="margin: 0; color: var(--nyu-purple-dark);">{{ t('appeal_success.expected_time') }}</h4>
+          <p style="margin: 4px 0 0; color: var(--nyu-purple); font-size: 14px;">{{ t('appeal_success.time_desc') | safe }}</p>
         </div>
       </div>
     </div>
-    
+
     <!-- 联系方式 -->
     <div style="border: 1px solid var(--border-light); border-radius: 12px; padding: 20px; margin-bottom: 32px;">
-      <h4 style="margin: 0 0 12px; color: var(--text-primary);">需要帮助？</h4>
+      <h4 style="margin: 0 0 12px; color: var(--text-primary);">{{ t('appeal_success.need_help') }}</h4>
       <p style="margin: 0; color: var(--text-secondary); font-size: 14px; line-height: 1.5;">
-        如果您有任何疑问或需要补充材料，请回复我们发送给您的确认邮件，或者通过以下方式联系我们：
+        {{ t('appeal_success.help_desc') }}
       </p>
       <p style="margin: 8px 0 0; color: var(--nyu-purple); font-size: 14px;">
-        📧 邮箱：{{ config.MAIL_DEFAULT_SENDER or config.MAIL_USERNAME or 'admin@example.com' }}
+        {{ t('appeal_success.email_label') }}{{ config.MAIL_DEFAULT_SENDER or config.MAIL_USERNAME or 'admin@example.com' }}
       </p>
     </div>
-    
+
     <!-- 操作按钮 -->
     <div class="btn-group" style="justify-content: center;">
-      <a href="/" class="btn btn-primary">返回首页</a>
-      <a href="/s/{{ appeal.submission_id }}?source=search" class="btn btn-secondary">查看原记录</a>
+      <a href="/" class="btn btn-primary">{{ t('appeal_success.back_home') }}</a>
+      <a href="/s/{{ appeal.submission_id }}?source=search" class="btn btn-secondary">{{ t('appeal_success.view_original') }}</a>
     </div>
   </div>
 </div>

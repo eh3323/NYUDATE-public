@@ -1166,80 +1166,80 @@
   {% endif %}
   
   <div class="mb-5">
-    <h1 class="section-title">提交您的评价</h1>
-    <p class="section-subtitle">请基于您的真实经历进行评价。提交后将AI预审后进入人工审核流程；提交通常在约 30 分钟内处理。</p>
+    <h1 class="section-title">{{ t('upload.page_title') }}</h1>
+    <p class="section-subtitle">{{ t('upload.page_subtitle') }}</p>
   </div>
 
   <form action="/upload" method="post" enctype="multipart/form-data">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
     <div class="card mb-4">
-      <h3 style="margin-top: 0; margin-bottom: 24px; color: var(--nyu-purple);">联系信息</h3>
+      <h3 style="margin-top: 0; margin-bottom: 24px; color: var(--nyu-purple);">{{ t('upload.contact_info') }}</h3>
       <div class="form-group">
-        <label for="submitter_email">您的邮箱 <span style="color: #DC2626;">*</span></label>
+        <label for="submitter_email">{{ t('upload.your_email') }} <span style="color: #DC2626;">*</span></label>
         <input id="submitter_email" type="email" name="submitter_email" value="{{ form_data.submitter_email if form_data else '' }}" required placeholder="you@example.com" />
-        <div class="text-light mt-1" style="font-size: 14px;">仅用于与您联系与通知进度</div>
+        <div class="text-light mt-1" style="font-size: 14px;">{{ t('upload.email_hint') }}</div>
       </div>
     </div>
 
     <div class="card mb-4">
-      <h3 style="margin-top: 0; margin-bottom: 24px; color: var(--nyu-purple);">TA的信息</h3>
+      <h3 style="margin-top: 0; margin-bottom: 24px; color: var(--nyu-purple);">{{ t('upload.ta_info') }}</h3>
 
       <div class="grid grid-2 mb-0">
         <div class="form-group">
-          <label for="professor_cn_name">TA的中文名</label>
+          <label for="professor_cn_name">{{ t('upload.cn_name') }}</label>
           <input id="professor_cn_name" type="text" name="professor_cn_name" value="{{ form_data.professor_cn_name if form_data else '' }}" placeholder="例如：李四" />
           <div class="text-light mt-1" style="font-size: 14px;">
-            我们仅在精准姓名匹配搜索时显示全名
+            {{ t('upload.name_hint') }}
           </div>
         </div>
         <div class="form-group">
-          <label for="professor_en_name">TA的英文全名</label>
-          <input id="professor_en_name" type="text" name="professor_en_name" value="{{ form_data.professor_en_name if form_data else '' }}" placeholder="例如：Alice Li" />
+          <label for="professor_en_name">{{ t('upload.en_name') }}</label>
+          <input id="professor_en_name" type="text" name="professor_en_name" value="{{ form_data.professor_en_name if form_data else '' }}" placeholder="Alice Li" />
         </div>
       </div>
     </div>
 
     <div class="card mb-4">
-      <h3 style="margin-top: 0; margin-bottom: 24px; color: var(--nyu-purple);">评价内容</h3>
-      
+      <h3 style="margin-top: 0; margin-bottom: 24px; color: var(--nyu-purple);">{{ t('upload.review_content') }}</h3>
+
       <div class="form-group">
-        <label>标签选择</label>
-        
+        <label>{{ t('upload.tag_selection') }}</label>
+
         <div style="margin-top: 16px; margin-bottom: 24px;">
           <div class="tag-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 16px;">
             <label class="tag-minimal-blue" style="display: flex; align-items: center; padding: 12px 16px; border: 1px solid #E2E8F0; background: #FAFAFA; border-radius: 12px; cursor: pointer; transition: all 0.2s ease;">
-              <input type="checkbox" name="tag_loyal" style="margin-right: 10px; width: auto;" {{ 'checked' if form_data and form_data.tag_loyal else '' }} /> 
-              <span style="color: #475569; font-weight: 400; font-size: 14px;">忠诚</span>
+              <input type="checkbox" name="tag_loyal" style="margin-right: 10px; width: auto;" {{ 'checked' if form_data and form_data.tag_loyal else '' }} />
+              <span style="color: #475569; font-weight: 400; font-size: 14px;">{{ t('tags.loyal') }}</span>
             </label>
             <label class="tag-minimal-blue" style="display: flex; align-items: center; padding: 12px 16px; border: 1px solid #E2E8F0; background: #FAFAFA; border-radius: 12px; cursor: pointer; transition: all 0.2s ease;">
-              <input type="checkbox" name="tag_stable" style="margin-right: 10px; width: auto;" {{ 'checked' if form_data and form_data.tag_stable else '' }} /> 
-              <span style="color: #475569; font-weight: 400; font-size: 14px;">情绪稳定</span>
+              <input type="checkbox" name="tag_stable" style="margin-right: 10px; width: auto;" {{ 'checked' if form_data and form_data.tag_stable else '' }} />
+              <span style="color: #475569; font-weight: 400; font-size: 14px;">{{ t('tags.stable') }}</span>
             </label>
             <label class="tag-minimal-blue" style="display: flex; align-items: center; padding: 12px 16px; border: 1px solid #E2E8F0; background: #FAFAFA; border-radius: 12px; cursor: pointer; transition: all 0.2s ease;">
-              <input type="checkbox" name="tag_sincere" style="margin-right: 10px; width: auto;" {{ 'checked' if form_data and form_data.tag_sincere else '' }} /> 
-              <span style="color: #475569; font-weight: 400; font-size: 14px;">真诚付出</span>
+              <input type="checkbox" name="tag_sincere" style="margin-right: 10px; width: auto;" {{ 'checked' if form_data and form_data.tag_sincere else '' }} />
+              <span style="color: #475569; font-weight: 400; font-size: 14px;">{{ t('tags.sincere') }}</span>
             </label>
             <label class="tag-minimal-blue" style="display: flex; align-items: center; padding: 12px 16px; border: 1px solid #E2E8F0; background: #FAFAFA; border-radius: 12px; cursor: pointer; transition: all 0.2s ease;">
-              <input type="checkbox" name="tag_humorous" style="margin-right: 10px; width: auto;" {{ 'checked' if form_data and form_data.tag_humorous else '' }} /> 
-              <span style="color: #475569; font-weight: 400; font-size: 14px;">幽默</span>
+              <input type="checkbox" name="tag_humorous" style="margin-right: 10px; width: auto;" {{ 'checked' if form_data and form_data.tag_humorous else '' }} />
+              <span style="color: #475569; font-weight: 400; font-size: 14px;">{{ t('tags.humorous') }}</span>
             </label>
           </div>
           <div class="tag-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;">
             <label class="tag-minimal-red" style="display: flex; align-items: center; padding: 12px 16px; border: 1px solid #E2E8F0; background: #FAFAFA; border-radius: 12px; cursor: pointer; transition: all 0.2s ease;">
-              <input type="checkbox" name="tag_positive" style="margin-right: 10px; width: auto;" {{ 'checked' if form_data and form_data.tag_positive else '' }} /> 
-              <span style="color: #475569; font-weight: 400; font-size: 14px;">出轨</span>
+              <input type="checkbox" name="tag_positive" style="margin-right: 10px; width: auto;" {{ 'checked' if form_data and form_data.tag_positive else '' }} />
+              <span style="color: #475569; font-weight: 400; font-size: 14px;">{{ t('tags.cheating') }}</span>
             </label>
             <label class="tag-minimal-red" style="display: flex; align-items: center; padding: 12px 16px; border: 1px solid #E2E8F0; background: #FAFAFA; border-radius: 12px; cursor: pointer; transition: all 0.2s ease;">
-              <input type="checkbox" name="tag_calm" style="margin-right: 10px; width: auto;" {{ 'checked' if form_data and form_data.tag_calm else '' }} /> 
-              <span style="color: #475569; font-weight: 400; font-size: 14px;">冷暴力</span>
+              <input type="checkbox" name="tag_calm" style="margin-right: 10px; width: auto;" {{ 'checked' if form_data and form_data.tag_calm else '' }} />
+              <span style="color: #475569; font-weight: 400; font-size: 14px;">{{ t('tags.cold_violence') }}</span>
             </label>
             <label class="tag-minimal-red" style="display: flex; align-items: center; padding: 12px 16px; border: 1px solid #E2E8F0; background: #FAFAFA; border-radius: 12px; cursor: pointer; transition: all 0.2s ease;">
-              <input type="checkbox" name="tag_leadership" style="margin-right: 10px; width: auto;" {{ 'checked' if form_data and form_data.tag_leadership else '' }} /> 
-              <span style="color: #475569; font-weight: 400; font-size: 14px;">PUA</span>
+              <input type="checkbox" name="tag_leadership" style="margin-right: 10px; width: auto;" {{ 'checked' if form_data and form_data.tag_leadership else '' }} />
+              <span style="color: #475569; font-weight: 400; font-size: 14px;">{{ t('tags.pua') }}</span>
             </label>
             <label class="tag-minimal-red" style="display: flex; align-items: center; padding: 12px 16px; border: 1px solid #E2E8F0; background: #FAFAFA; border-radius: 12px; cursor: pointer; transition: all 0.2s ease;">
-              <input type="checkbox" name="tag_homework_heavy" style="margin-right: 10px; width: auto;" {{ 'checked' if form_data and form_data.tag_homework_heavy else '' }} /> 
-              <span style="color: #475569; font-weight: 400; font-size: 14px;">骗钱</span>
+              <input type="checkbox" name="tag_homework_heavy" style="margin-right: 10px; width: auto;" {{ 'checked' if form_data and form_data.tag_homework_heavy else '' }} />
+              <span style="color: #475569; font-weight: 400; font-size: 14px;">{{ t('tags.money') }}</span>
             </label>
           </div>
         </div>
@@ -1253,9 +1253,9 @@
       -->
 
       <div class="form-group">
-        <label for="description">详细描述 <span style="color: #DC2626;">*</span></label>
-        <textarea id="description" name="description" rows="8" required 
-                  placeholder="请描述您个人的真实经历，避免无端指控和任何隐私信息。推荐包含新闻六要素：时间、地点、人物（使用代称）、起因、经过、结果。"
+        <label for="description">{{ t('upload.description') }} <span style="color: #DC2626;">*</span></label>
+        <textarea id="description" name="description" rows="8" required
+                  placeholder="{{ t('upload.description_placeholder') }}"
                   style="min-height: 150px;">{{ form_data.description if form_data else '' }}</textarea>
       </div>
     </div>
@@ -1307,28 +1307,28 @@
     {% endif %}
 
     <div class="card mb-4">
-      <h3 style="margin-top: 0; margin-bottom: 24px; color: var(--nyu-purple);">证据材料（推荐）</h3>
-      
+      <h3 style="margin-top: 0; margin-bottom: 24px; color: var(--nyu-purple);">{{ t('upload.evidence_title') }}</h3>
+
       <div class="alert alert-info mb-3">
         <div class="alert-content">
-          <strong>隐私保护提示</strong>
-          <p style="margin: 8px 0 0;">系统将对证据文件进行充分模糊化处理；原始文件仅供审核使用，对外不可访问。<strong style="color: #DC2626;"></strong></p>
+          <strong>{{ t('upload.privacy_protection') }}</strong>
+          <p style="margin: 8px 0 0;">{{ t('upload.privacy_hint') }}</p>
         </div>
     </div>
 
       <div class="form-group">
-        <label>证据文件</label>
+        <label>{{ t('upload.evidence_files') }}</label>
         <div class="file-upload-container">
-          <input type="file" id="all_evidences" name="all_evidences" 
-                 accept="image/*,.pdf,.txt,.doc,.docx,video/*" multiple 
+          <input type="file" id="all_evidences" name="all_evidences"
+                 accept="image/*,.pdf,.txt,.doc,.docx,video/*" multiple
                  style="display: none;" />
           <div class="file-drop-zone" onclick="document.getElementById('all_evidences').click()">
             <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="opacity: 0.4; margin-bottom: 8px;">
               <path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
             </svg>
-            <p style="margin: 0; color: var(--text-primary); font-weight: 500;">点击或拖拽文件到此处</p>
+            <p style="margin: 0; color: var(--text-primary); font-weight: 500;">{{ t('upload.drag_drop_hint') }}</p>
             <p style="margin: 8px 0 0; color: var(--text-light); font-size: 14px;">
-              支持文档、图片、视频（如：PDF、JPG、PNG、MP4）
+              {{ t('upload.file_types_hint') }}
             </p>
           </div>
           <div class="files-list" id="unified-files-list"></div>
@@ -1337,25 +1337,25 @@
     </div>
 
     <div class="card mb-4">
-      <h3 style="margin-top: 0; margin-bottom: 24px; color: var(--nyu-purple);">隐私设置</h3>
+      <h3 style="margin-top: 0; margin-bottom: 24px; color: var(--nyu-purple);">{{ t('upload.privacy_settings') }}</h3>
 
       <div style="display: flex; flex-direction: column; gap: 16px;">
         <label class="privacy-checkbox" style="display: flex; align-items: flex-start; padding: 16px; background: var(--surface-secondary); border-radius: 10px; cursor: pointer;">
           <input type="checkbox" name="privacy_homepage" style="margin-right: 12px; margin-top: 2px; width: 18px; height: 18px; min-width: 18px; flex-shrink: 0;" checked />
           <div>
-            <div style="font-weight: 600; margin-bottom: 4px;">展示到首页</div>
-            <div class="text-light" style="font-size: 14px;">您的评价将可能出现在首页精选展示中（姓名会被保护）</div>
+            <div style="font-weight: 600; margin-bottom: 4px;">{{ t('upload.display_homepage') }}</div>
+            <div class="text-light" style="font-size: 14px;">{{ t('upload.display_homepage_desc') }}</div>
           </div>
         </label>
 
         <label class="privacy-checkbox required" style="display: flex; align-items: flex-start; padding: 16px; background: var(--surface-secondary); border-radius: 10px; cursor: pointer; border: 1px solid var(--border-light);">
           <input type="checkbox" name="legal_agreement" required style="margin-right: 12px; margin-top: 2px; width: 18px; height: 18px; min-width: 18px; flex-shrink: 0;" />
           <div>
-            <div style="font-weight: 600; margin-bottom: 4px;">法律条款同意 <span style="color: #DC2626;">*</span></div>
+            <div style="font-weight: 600; margin-bottom: 4px;">{{ t('upload.legal_agreement') }} <span style="color: #DC2626;">*</span></div>
             <div class="text-light" style="font-size: 14px;">
-              我已阅读并同意 
-              <a href="#" onclick="openLegalModal('terms'); return false;" style="color: var(--nyu-purple); text-decoration: none; border-bottom: 1px solid var(--nyu-purple);">服务条款</a> 和 
-              <a href="#" onclick="openLegalModal('privacy'); return false;" style="color: var(--nyu-purple); text-decoration: none; border-bottom: 1px solid var(--nyu-purple);">隐私政策</a>。
+              {{ t('upload.legal_agreement_desc') }}
+              <a href="#" onclick="openLegalModal('terms'); return false;" style="color: var(--nyu-purple); text-decoration: none; border-bottom: 1px solid var(--nyu-purple);">{{ t('footer.terms') }}</a> {{ t('upload.and') }}
+              <a href="#" onclick="openLegalModal('privacy'); return false;" style="color: var(--nyu-purple); text-decoration: none; border-bottom: 1px solid var(--nyu-purple);">{{ t('footer.privacy') }}</a>。
             </div>
           </div>
         </label>
@@ -1366,7 +1366,7 @@
     <div class="mt-3" style="display:flex; flex-direction:column; align-items:center; gap:16px;">
       <div id="ts-container" style="display: none;"></div>
       <div id="ts-status" class="text-light" style="font-size:13px; text-align:center;">
-        <span style="color: var(--text-secondary);">人机验证将在勾选法律条款同意后自动加载</span>
+        <span style="color: var(--text-secondary);">{{ t('upload.verification_hint') }}</span>
       </div>
     </div>
     <script>
@@ -1867,9 +1867,9 @@
     
     <div class="submit-buttons" style="display: flex; gap: 16px; justify-content: center;">
       <button class="btn btn-primary" type="submit" style="padding: 14px 32px; font-size: 16px;">
-        提交评价
+        {{ t('upload.submit_review_btn') }}
       </button>
-      <a class="btn" href="/" style="padding: 14px 32px; font-size: 16px;">返回首页</a>
+      <a class="btn" href="/" style="padding: 14px 32px; font-size: 16px;">{{ t('upload.back_home_btn') }}</a>
     </div>
   </form>
 </div>

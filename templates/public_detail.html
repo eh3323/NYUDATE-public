@@ -7,8 +7,8 @@
 }
 </style>
 <div class="hero">
-  <h1>记录详情</h1>
-  <p class="muted">本页展示经审核的用户提交内容。内容为用户主观意见，准确性与完整性不作保证。</p>
+  <h1>{{ t('detail.page_title') }}</h1>
+  <p class="muted">{{ t('detail.page_subtitle') }}</p>
 </div>
 
 <div class="card mt-16" style="position: relative;">
@@ -37,43 +37,43 @@
     </button>
   </div>
   
-  <div class="section-title">基本信息</div>
+  <div class="section-title">{{ t('detail.basic_info') }}</div>
   <div class="mt-8">
-    <div><strong>TA的名字：</strong> {{ sub.get_display_name(masked=from_privacy) }}</div>
+    <div><strong>{{ t('detail.ta_name') }}</strong> {{ sub.get_display_name(masked=from_privacy) }}</div>
   </div>
 
   <div class="mt-16">
-    <strong>标签：</strong>
+    <strong>{{ t('detail.tags_label') }}</strong>
     <div style="margin-top: 8px; display: flex; flex-wrap: wrap; gap: 8px;">
       <!-- 褒义标签 -->
-      {% if sub.tag_loyal %}<span class="badge badge-positive">忠诚</span>{% endif %}
-      {% if sub.tag_stable %}<span class="badge badge-positive">情绪稳定</span>{% endif %}
-      {% if sub.tag_sincere %}<span class="badge badge-positive">真诚付出</span>{% endif %}
-      {% if sub.tag_humorous %}<span class="badge badge-positive">幽默</span>{% endif %}
-      
+      {% if sub.tag_loyal %}<span class="badge badge-positive">{{ t('tags.loyal') }}</span>{% endif %}
+      {% if sub.tag_stable %}<span class="badge badge-positive">{{ t('tags.stable') }}</span>{% endif %}
+      {% if sub.tag_sincere %}<span class="badge badge-positive">{{ t('tags.sincere') }}</span>{% endif %}
+      {% if sub.tag_humorous %}<span class="badge badge-positive">{{ t('tags.humorous') }}</span>{% endif %}
+
       <!-- 贬义标签 -->
-      {% if sub.tag_positive %}<span class="badge badge-negative">出轨</span>{% endif %}
-      {% if sub.tag_calm %}<span class="badge badge-negative">冷暴力</span>{% endif %}
-      {% if sub.tag_leadership %}<span class="badge badge-negative">PUA</span>{% endif %}
-      {% if sub.tag_homework_heavy %}<span class="badge badge-negative">骗钱</span>{% endif %}
-      
+      {% if sub.tag_positive %}<span class="badge badge-negative">{{ t('tags.cheating') }}</span>{% endif %}
+      {% if sub.tag_calm %}<span class="badge badge-negative">{{ t('tags.cold_violence') }}</span>{% endif %}
+      {% if sub.tag_leadership %}<span class="badge badge-negative">{{ t('tags.pua') }}</span>{% endif %}
+      {% if sub.tag_homework_heavy %}<span class="badge badge-negative">{{ t('tags.money') }}</span>{% endif %}
+
       <!-- 自定义标签 -->
       {% if sub.tag_custom %}<span class="badge badge-neutral">{{ sub.tag_custom }}</span>{% endif %}
     </div>
   </div>
 
   <div class="mt-16 prose">
-    <div class="section-title">描述</div>
+    <div class="section-title">{{ t('detail.description_label') }}</div>
     <div class="mt-8">{{ sub.description | safe_newlines | safe }}</div>
   </div>
 
   <div class="mt-16">
-    <div class="section-title">证据缩略图</div>
+    <div class="section-title">{{ t('detail.evidence_thumbnails') }}</div>
     {% if sub.allow_public_evidence %}
       <div class="alert alert-info mt-8 mb-8">
         <div class="alert-content">
-          <strong>隐私保护说明</strong>
-          <p style="margin: 8px 0 0;">为保护隐私，以下仅显示经过模糊处理的证据缩略图，无法下载原始文件。</p>
+          <strong>{{ t('detail.privacy_notice_title') }}</strong>
+          <p style="margin: 8px 0 0;">{{ t('detail.privacy_notice_desc') }}</p>
         </div>
       </div>
       <div class="mt-8">
@@ -82,10 +82,10 @@
           {% if ev.category in ['image','chat_image'] %}
             <div class="mt-8" style="border: 1px solid #dee2e6; border-radius: 8px; padding: 12px;">
               <img class="preview" src="/evidence/{{ sub.id }}/{{ ev.id }}" alt="{{ ev.original_filename }}" style="border-radius: 8px; max-width: 300px; display: block;" />
-              <div class="mt-2" style="font-size: 12px; color: var(--text-secondary);">文件: {{ ev.original_filename }}</div>
+              <div class="mt-2" style="font-size: 12px; color: var(--text-secondary);">{{ t('detail.file') }} {{ ev.original_filename }}</div>
               {% if ev.description %}
               <div class="mt-2" style="font-size: 13px; padding: 8px; background: #f8f9fa; border-radius: 4px;">
-                <strong>说明:</strong> {{ ev.description }}
+                <strong>{{ t('detail.description') }}</strong> {{ ev.description }}
               </div>
               {% endif %}
             </div>
@@ -97,10 +97,10 @@
           {% if ev.category in ['video', 'chat_video'] %}
             <div class="mt-8" style="border: 1px solid #dee2e6; border-radius: 8px; padding: 12px;">
               <img src="/evidence/{{ sub.id }}/{{ ev.id }}" alt="视频缩略图" style="max-width: 300px; border-radius: 8px; display: block;" />
-              <div class="mt-2" style="font-size: 12px; color: var(--text-secondary);">视频文件: {{ ev.original_filename }}</div>
+              <div class="mt-2" style="font-size: 12px; color: var(--text-secondary);">{{ t('detail.video_file') }} {{ ev.original_filename }}</div>
               {% if ev.description %}
               <div class="mt-2" style="font-size: 13px; padding: 8px; background: #f8f9fa; border-radius: 4px;">
-                <strong>说明:</strong> {{ ev.description }}
+                <strong>{{ t('detail.description') }}</strong> {{ ev.description }}
               </div>
               {% endif %}
             </div>
@@ -112,10 +112,10 @@
           {% if ev.category == 'document' %}
             <div class="mt-8" style="border: 1px solid #dee2e6; border-radius: 8px; padding: 12px;">
               <img src="/evidence/{{ sub.id }}/{{ ev.id }}" alt="文档缩略图" style="max-width: 300px; border-radius: 8px; display: block;" />
-              <div class="mt-2" style="font-size: 12px; color: var(--text-secondary);">文档文件: {{ ev.original_filename }}</div>
+              <div class="mt-2" style="font-size: 12px; color: var(--text-secondary);">{{ t('detail.document_file') }} {{ ev.original_filename }}</div>
               {% if ev.description %}
               <div class="mt-2" style="font-size: 13px; padding: 8px; background: #f8f9fa; border-radius: 4px;">
-                <strong>说明:</strong> {{ ev.description }}
+                <strong>{{ t('detail.description') }}</strong> {{ ev.description }}
               </div>
               {% endif %}
             </div>
@@ -123,55 +123,55 @@
         {% endfor %}
       </div>
     {% else %}
-      <div class="muted">上传者未开放证据缩略图</div>
+      <div class="muted">{{ t('detail.evidence_not_public') }}</div>
     {% endif %}
   </div>
 
 
-  <div class="callout mt-16 meta">提示：如认为该记录存在不准确或权益受损，请使用下方申诉功能。我们将尽快处理。</div>
+  <div class="callout mt-16 meta">{{ t('detail.appeal_hint') }}</div>
 
   <!-- 评论区 -->
   <div class="mt-24">
-    <div class="section-title">评论区</div>
-    
+    <div class="section-title">{{ t('detail.comments_section') }}</div>
+
     <!-- 评论列表 -->
     <div id="comments-list" class="mt-12">
       <div id="comments-loading" style="text-align: center; padding: 32px; color: var(--text-light); font-size: 15px;">
         <div style="display: inline-flex; align-items: center; gap: 8px;">
           <div style="width: 16px; height: 16px; border: 2px solid var(--border-light); border-top: 2px solid var(--nyu-purple); border-radius: 50%; animation: spin 1s linear infinite;"></div>
-          正在加载评论...
+          {{ t('detail.loading_comments') }}
         </div>
       </div>
       <div id="comments-container" style="display: none;">
       </div>
       <div id="comments-empty" style="display: none; text-align: center; padding: 32px 0;">
-        <div style="font-size: 15px; color: var(--text-secondary); margin-bottom: 4px;">暂无评论</div>
-        <div style="font-size: 13px; color: var(--text-light);">快来发表第一条评论吧！</div>
+        <div style="font-size: 15px; color: var(--text-secondary); margin-bottom: 4px;">{{ t('detail.no_comments') }}</div>
+        <div style="font-size: 13px; color: var(--text-light);">{{ t('detail.first_comment') }}</div>
       </div>
     </div>
-    
+
     <!-- 评论输入区域 -->
     <div class="mt-16">
       <form id="comment-form">
         <input type="hidden" id="reply-to-id" value="">
         <div id="reply-indicator" style="display: none; margin-bottom: 12px; padding: 12px 16px; background: var(--nyu-purple-pale); border-radius: 10px; font-size: 14px; color: var(--nyu-purple-dark); border: 1px solid var(--border-ultra-light);">
           <span id="reply-indicator-text" style="font-weight: 500;"></span>
-          <button type="button" id="cancel-reply" style="margin-left: 12px; background: var(--nyu-purple); color: white; border: none; border-radius: 6px; padding: 4px 8px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s ease;" onmouseover="this.style.background='var(--nyu-purple-dark)';" onmouseout="this.style.background='var(--nyu-purple)';">取消回复</button>
+          <button type="button" id="cancel-reply" style="margin-left: 12px; background: var(--nyu-purple); color: white; border: none; border-radius: 6px; padding: 4px 8px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s ease;" onmouseover="this.style.background='var(--nyu-purple-dark)';" onmouseout="this.style.background='var(--nyu-purple)';">{{ t('detail.cancel_reply') }}</button>
         </div>
-        
+
         <div class="form-group">
-          <textarea 
-            id="comment-input" 
-            name="content" 
-            placeholder="请输入您的评论...（最多1000字符）" 
+          <textarea
+            id="comment-input"
+            name="content"
+            placeholder="{{ t('detail.comment_placeholder') }}"
             rows="4"
             maxlength="1000"
             style="
-              width: 100%; 
-              padding: 16px; 
-              border: 2px solid var(--border-light); 
-              border-radius: 10px; 
-              resize: vertical; 
+              width: 100%;
+              padding: 16px;
+              border: 2px solid var(--border-light);
+              border-radius: 10px;
+              resize: vertical;
               font-family: inherit;
               font-size: 15px;
               line-height: 1.5;
@@ -180,16 +180,16 @@
               outline: none;
             " onfocus="this.style.borderColor='var(--nyu-purple)'" onblur="this.style.borderColor='var(--border-light)'" onmouseover="this.style.borderColor='var(--text-light)'" onmouseout="this.style.borderColor='var(--border-light)'"></textarea>
         </div>
-        
+
         <!-- 审核失败提示区域 -->
         <div id="moderation-notice" style="display: none; margin-top: 12px; padding: 16px 20px; background: var(--badge-warning); border: 1px solid #ffeaa7; border-radius: 12px; color: #B85C00; border-left: 4px solid #B85C00;">
         </div>
-        
+
         <div class="mt-8" style="display: flex; justify-content: space-between; align-items: center;">
           <span id="char-count" style="font-size: 13px; color: var(--text-light); font-weight: 500;">0/1000</span>
-          <button 
-            type="submit" 
-            id="submit-comment-btn" 
+          <button
+            type="submit"
+            id="submit-comment-btn"
             style="
               padding: 12px 24px;
               background: var(--gradient-primary);
@@ -205,15 +205,15 @@
             "
             onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='var(--shadow-lg)';"
             onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='var(--shadow-md)';"
-          >发表评论</button>
+          >{{ t('detail.post_comment') }}</button>
         </div>
       </form>
     </div>
   </div>
 
   <div class="mt-16">
-    <a class="btn" href="/appeal/{{ sub.id }}">申诉</a>
-    <a class="btn secondary" href="/">返回</a>
+    <a class="btn" href="/appeal/{{ sub.id }}">{{ t('detail.appeal_btn') }}</a>
+    <a class="btn secondary" href="/">{{ t('detail.back_btn') }}</a>
   </div>
 </div>
 

@@ -2,51 +2,51 @@
 {% block content %}
 <div class="hero">
   <div class="hero-content">
-    <h1>提交成功！</h1>
-    <p>您的评价已成功提交并进入审核流程</p>
+    <h1>{{ t('success.page_title') }}</h1>
+    <p>{{ t('success.page_subtitle') }}</p>
   </div>
 </div>
 
 <div class="card mt-4">
-  <div class="section-title">提交详情</div>
+  <div class="section-title">{{ t('success.submission_details') }}</div>
   <div class="grid grid-2 mt-3">
     <div>
-      <div class="kicker">TA的信息</div>
+      <div class="kicker">{{ t('success.ta_info') }}</div>
       <div class="mt-2">
-        {% if submission.professor_cn_name %}<div><strong>中文名：</strong>{{ submission.professor_cn_name }}</div>{% endif %}
-        {% if submission.professor_en_name %}<div><strong>英文名：</strong>{{ submission.professor_en_name }}</div>{% endif %}
-        {% if submission.professor_birthday %}<div><strong>生日：</strong>{{ submission.professor_birthday }}</div>{% endif %}
-        {% if submission.professor_unique_identifier %}<div><strong>标识：</strong>{{ submission.professor_unique_identifier }}</div>{% endif %}
+        {% if submission.professor_cn_name %}<div><strong>{{ t('success.cn_name') }}</strong>{{ submission.professor_cn_name }}</div>{% endif %}
+        {% if submission.professor_en_name %}<div><strong>{{ t('success.en_name') }}</strong>{{ submission.professor_en_name }}</div>{% endif %}
+        {% if submission.professor_birthday %}<div><strong>{{ t('success.birthday') }}</strong>{{ submission.professor_birthday }}</div>{% endif %}
+        {% if submission.professor_unique_identifier %}<div><strong>{{ t('success.identifier') }}</strong>{{ submission.professor_unique_identifier }}</div>{% endif %}
       </div>
     </div>
     <div>
-      <div class="kicker">标签</div>
+      <div class="kicker">{{ t('success.tags') }}</div>
       <div class="mt-2" style="display: flex; flex-wrap: wrap; gap: 6px;">
         <!-- 积极品质标签 -->
-        {% if submission.tag_loyal %}<span class="badge" style="background: #059669; color: white;">忠诚</span>{% endif %}
-        {% if submission.tag_stable %}<span class="badge" style="background: #059669; color: white;">情绪稳定</span>{% endif %}
-        {% if submission.tag_sincere %}<span class="badge" style="background: #059669; color: white;">真诚付出</span>{% endif %}
-        {% if submission.tag_humorous %}<span class="badge" style="background: #059669; color: white;">幽默</span>{% endif %}
-        
+        {% if submission.tag_loyal %}<span class="badge" style="background: #059669; color: white;">{{ t('tags.loyal') }}</span>{% endif %}
+        {% if submission.tag_stable %}<span class="badge" style="background: #059669; color: white;">{{ t('tags.stable') }}</span>{% endif %}
+        {% if submission.tag_sincere %}<span class="badge" style="background: #059669; color: white;">{{ t('tags.sincere') }}</span>{% endif %}
+        {% if submission.tag_humorous %}<span class="badge" style="background: #059669; color: white;">{{ t('tags.humorous') }}</span>{% endif %}
+
         <!-- 问题行为标签 -->
-        {% if submission.tag_positive %}<span class="badge" style="background: #DC2626; color: white;">出轨</span>{% endif %}
-        {% if submission.tag_calm %}<span class="badge" style="background: #DC2626; color: white;">冷暴力</span>{% endif %}
-        {% if submission.tag_leadership %}<span class="badge" style="background: #DC2626; color: white;">PUA</span>{% endif %}
-        {% if submission.tag_homework_heavy %}<span class="badge" style="background: #DC2626; color: white;">骗钱</span>{% endif %}
-        
+        {% if submission.tag_positive %}<span class="badge" style="background: #DC2626; color: white;">{{ t('tags.cheating') }}</span>{% endif %}
+        {% if submission.tag_calm %}<span class="badge" style="background: #DC2626; color: white;">{{ t('tags.cold_violence') }}</span>{% endif %}
+        {% if submission.tag_leadership %}<span class="badge" style="background: #DC2626; color: white;">{{ t('tags.pua') }}</span>{% endif %}
+        {% if submission.tag_homework_heavy %}<span class="badge" style="background: #DC2626; color: white;">{{ t('tags.money') }}</span>{% endif %}
+
         <!-- 自定义标签 -->
         {% if submission.tag_custom %}<span class="badge badge-primary">{{ submission.tag_custom }}</span>{% endif %}
       </div>
     </div>
   </div>
-  
+
   <div class="mt-4">
-    <div class="kicker">描述摘要</div>
+    <div class="kicker">{{ t('success.description_summary') }}</div>
     <div class="mt-2 prose">{{ submission.description[:200] }}{% if submission.description|length > 200 %}...{% endif %}</div>
   </div>
 
   <div class="mt-4">
-    <div class="kicker">证据材料</div>
+    <div class="kicker">{{ t('success.evidence_materials') }}</div>
     <div class="mt-2">
       {% for ev in submission.evidences %}
         <div class="badge">{{ ev.original_filename }}</div>
@@ -56,22 +56,28 @@
 </div>
 
 <div class="card mt-4">
-  <div class="section-title">后续流程</div>
+  <div class="section-title">{{ t('success.next_steps') }}</div>
   <div class="grid grid-3 mt-3">
     <div class="feature-box">
       <div class="feature-icon">📧</div>
-      <div class="feature-title">确认邮件</div>
-      <div class="feature-description">正在发送确认邮件到 {{ submission.submitter_email }}</div>
+      <div class="feature-title">{{ t('success.confirmation_email') }}</div>
+      <div class="feature-description">
+        {% if current_lang() == 'zh' %}
+          正在发送确认邮件到 {{ submission.submitter_email }}
+        {% else %}
+          Sending confirmation email to {{ submission.submitter_email }}
+        {% endif %}
+      </div>
     </div>
     <div class="feature-box">
       <div class="feature-icon">⏳</div>
-      <div class="feature-title">处理中</div>
-      <div class="feature-description">正在生成缩略图，90%的评价在30分钟内完成审核</div>
+      <div class="feature-title">{{ t('success.processing') }}</div>
+      <div class="feature-description">{{ t('success.processing_desc') }}</div>
     </div>
     <div class="feature-box">
       <div class="feature-icon">📱</div>
-      <div class="feature-title">结果通知</div>
-      <div class="feature-description">处理完成后会邮件通知结果</div>
+      <div class="feature-title">{{ t('success.notification') }}</div>
+      <div class="feature-description">{{ t('success.notification_desc') }}</div>
     </div>
   </div>
 </div>
@@ -79,7 +85,7 @@
 
 
 <div class="btn-group mt-4">
-  <a href="/" class="btn btn-primary">返回首页</a>
-  <a href="/upload" class="btn">继续提交</a>
+  <a href="/" class="btn btn-primary">{{ t('success.back_home') }}</a>
+  <a href="/upload" class="btn">{{ t('success.continue_submit') }}</a>
 </div>
 {% endblock %}

@@ -8,7 +8,6 @@
   <link rel="icon" type="image/png" href="/static/NYU-Symbol.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Libre+Baskerville:wght@700&display=swap" rel="stylesheet">
   <style>
     :root {
       --nyu-purple: #57068C;
@@ -38,18 +37,19 @@
     
     body {
       margin: 0;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
       color: var(--text-primary);
-      background: var(--surface-secondary);
-      background-image: 
-        radial-gradient(ellipse at top right, rgba(87, 6, 140, 0.05), transparent 50%),
-        radial-gradient(ellipse at bottom left, rgba(255, 107, 53, 0.03), transparent 50%);
-      background-repeat: no-repeat, no-repeat;
-      background-position: top right, bottom left;
-      background-size: 80vmax 80vmax, 80vmax 80vmax;
+      background: #FAFBFC;
+      background-image:
+        radial-gradient(at 20% 10%, rgba(87, 6, 140, 0.06) 0px, transparent 50%),
+        radial-gradient(at 80% 30%, rgba(137, 0, 225, 0.04) 0px, transparent 50%),
+        radial-gradient(at 50% 90%, rgba(255, 107, 53, 0.05) 0px, transparent 50%);
+      background-attachment: fixed;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
-      line-height: 1.6;
+      line-height: 1.47059;
+      font-size: 17px;
+      min-height: 100vh;
     }
     
     ::selection {
@@ -97,10 +97,11 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      font-weight: 700;
-      font-size: 20px;
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+      font-weight: 600;
+      font-size: 21px;
       color: var(--nyu-purple);
-      letter-spacing: -0.5px;
+      letter-spacing: -0.005em;
     }
     
     .brand .logo {
@@ -220,16 +221,42 @@
     }
 
     h1, h2, h3, h4, h5, h6 {
-      font-family: 'Libre Baskerville', 'Inter', serif;
-      font-weight: 700;
-      line-height: 1.2;
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+      font-weight: 600;
+      line-height: 1.0714285714;
       color: var(--text-primary);
+      letter-spacing: -0.003em;
     }
-    
-    h1 { font-size: 48px; letter-spacing: -1px; }
-    h2 { font-size: 36px; letter-spacing: -0.5px; }
-    h3 { font-size: 28px; }
-    h4 { font-size: 24px; }
+
+    h1 {
+      font-size: 80px;
+      font-weight: 700;
+      letter-spacing: -0.015em;
+      line-height: 1.05;
+      background: linear-gradient(135deg, var(--nyu-purple) 0%, var(--nyu-purple-light) 60%, var(--nyu-accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      position: relative;
+    }
+    h2 {
+      font-size: 48px;
+      font-weight: 700;
+      letter-spacing: -0.009em;
+      line-height: 1.0833333333;
+    }
+    h3 {
+      font-size: 32px;
+      font-weight: 600;
+      letter-spacing: -0.005em;
+      line-height: 1.125;
+    }
+    h4 {
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: -0.003em;
+      line-height: 1.1666666667;
+    }
     
     .text-muted { color: var(--text-secondary); }
     .text-light { color: var(--text-light); }
@@ -400,12 +427,13 @@
     .py-2 { padding-top: 16px; padding-bottom: 16px; }
     .py-3 { padding-top: 24px; padding-bottom: 24px; }
 
-    .section-title { 
-      font-size: 32px; 
-      font-weight: 700; 
-      letter-spacing: -0.5px; 
-      margin-bottom: 8px;
-      font-family: 'Libre Baskerville', serif;
+    .section-title {
+      font-size: 48px;
+      font-weight: 700;
+      letter-spacing: -0.009em;
+      margin-bottom: 12px;
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+      line-height: 1.0833333333;
     }
     
     .section-subtitle {

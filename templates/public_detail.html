@@ -1,219 +1,549 @@
 {% extends 'base.html' %}
 {% block content %}
 <style>
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
+  /* ==================== Detail Page - Apple Style ==================== */
+  .detail-hero {
+    text-align: center;
+    padding: 48px 24px 32px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .detail-hero h1 {
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.008em;
+    margin-bottom: 12px;
+    background: linear-gradient(135deg, var(--nyu-purple) 0%, var(--nyu-purple-light) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .detail-hero p {
+    font-size: 17px;
+    line-height: 1.47;
+    color: var(--text-secondary);
+    letter-spacing: -0.016em;
+  }
+
+  .detail-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 24px 48px;
+  }
+
+  .detail-card {
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    position: relative;
+  }
+
+  .like-button {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    background: rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 20px;
+    padding: 8px 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: var(--text-secondary);
+  }
+
+  .like-button:hover {
+    background: rgba(0, 0, 0, 0.06);
+    transform: scale(1.05);
+  }
+
+  .like-button.liked {
+    background: rgba(87, 6, 140, 0.1);
+    border-color: rgba(87, 6, 140, 0.2);
+    color: var(--nyu-purple);
+  }
+
+  .detail-section {
+    margin-bottom: 32px;
+  }
+
+  .detail-section:last-child {
+    margin-bottom: 0;
+  }
+
+  .detail-section-title {
+    font-size: 21px;
+    font-weight: 600;
+    line-height: 1.28;
+    letter-spacing: -0.003em;
+    margin-bottom: 16px;
+    color: var(--text-primary);
+  }
+
+  .detail-info-row {
+    font-size: 17px;
+    line-height: 1.47;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+
+  .detail-info-row strong {
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .detail-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .detail-description {
+    font-size: 17px;
+    line-height: 1.58824;
+    color: var(--text-primary);
+    letter-spacing: -0.016em;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
+  .evidence-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+  }
+
+  .evidence-item {
+    background: var(--surface-secondary);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 12px;
+    padding: 12px;
+    transition: all 0.2s ease;
+  }
+
+  .evidence-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  .evidence-item img {
+    width: 100%;
+    border-radius: 8px;
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .evidence-filename {
+    font-size: 12px;
+    color: var(--text-light);
+    margin-bottom: 6px;
+  }
+
+  .evidence-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+    background: white;
+    padding: 8px 10px;
+    border-radius: 6px;
+    line-height: 1.4;
+  }
+
+  .evidence-desc strong {
+    font-weight: 600;
+  }
+
+  .alert-box {
+    background: rgba(255, 107, 53, 0.04);
+    border: 1px solid rgba(255, 107, 53, 0.12);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    font-size: 15px;
+    line-height: 1.47;
+    color: var(--text-secondary);
+  }
+
+  .alert-box strong {
+    color: var(--text-primary);
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  /* Comments Section */
+  .comments-section {
+    margin-top: 40px;
+  }
+
+  .comment-input-wrapper {
+    margin-bottom: 32px;
+  }
+
+  .comment-textarea {
+    width: 100%;
+    padding: 16px;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 12px;
+    resize: vertical;
+    font-family: inherit;
+    font-size: 15px;
+    line-height: 1.47;
+    background: white;
+    transition: all 0.2s ease;
+  }
+
+  .comment-textarea:focus {
+    outline: none;
+    border-color: var(--nyu-purple);
+    box-shadow: 0 0 0 3px rgba(87, 6, 140, 0.1);
+  }
+
+  .comment-textarea:hover {
+    border-color: rgba(0, 0, 0, 0.2);
+  }
+
+  .comment-footer-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
+  }
+
+  .char-counter {
+    font-size: 13px;
+    color: var(--text-light);
+    font-weight: 500;
+  }
+
+  .btn-submit-comment {
+    padding: 10px 24px;
+    background: var(--nyu-purple);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-submit-comment:hover {
+    background: var(--nyu-purple-dark);
+    transform: scale(1.02);
+  }
+
+  .btn-submit-comment:active {
+    transform: scale(0.98);
+  }
+
+  .btn-submit-comment:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .comment-item {
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 12px;
+    transition: all 0.2s ease;
+  }
+
+  .comment-item:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    transform: translateY(-1px);
+  }
+
+  .comment-item.reply {
+    margin-left: 32px;
+    background: var(--surface-secondary);
+    border-left: 3px solid var(--nyu-purple);
+  }
+
+  .comment-content {
+    font-size: 15px;
+    line-height: 1.53;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
+  .comment-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: var(--text-light);
+  }
+
+  .btn-reply {
+    background: rgba(87, 6, 140, 0.08);
+    border: none;
+    color: var(--nyu-purple);
+    cursor: pointer;
+    border-radius: 16px;
+    font-size: 13px;
+    padding: 6px 14px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+  }
+
+  .btn-reply:hover {
+    background: var(--nyu-purple);
+    color: white;
+  }
+
+  .reply-indicator {
+    background: rgba(87, 6, 140, 0.06);
+    border: 1px solid rgba(87, 6, 140, 0.12);
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 12px;
+    font-size: 14px;
+    color: var(--nyu-purple);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .btn-cancel-reply {
+    background: var(--nyu-purple);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .btn-cancel-reply:hover {
+    background: var(--nyu-purple-dark);
+  }
+
+  .loading-spinner {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-light);
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-secondary);
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 32px;
+    flex-wrap: wrap;
+  }
+
+  .btn-action {
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .btn-action.primary {
+    background: var(--nyu-purple);
+    color: white;
+    border: none;
+  }
+
+  .btn-action.primary:hover {
+    background: var(--nyu-purple-dark);
+    transform: translateY(-1px);
+  }
+
+  .btn-action.secondary {
+    background: white;
+    color: var(--text-primary);
+    border: 1px solid rgba(0, 0, 0, 0.12);
+  }
+
+  .btn-action.secondary:hover {
+    background: var(--surface-secondary);
+    border-color: rgba(0, 0, 0, 0.2);
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  @media (max-width: 768px) {
+    .detail-hero h1 {
+      font-size: 32px;
+    }
+
+    .detail-card {
+      padding: 24px;
+    }
+
+    .like-button {
+      top: 16px;
+      right: 16px;
+    }
+
+    .comment-item.reply {
+      margin-left: 16px;
+    }
+
+    .evidence-grid {
+      grid-template-columns: 1fr;
+    }
+  }
 </style>
-<div class="hero">
+
+<div class="detail-hero">
   <h1>{{ t('detail.page_title') }}</h1>
-  <p class="muted">{{ t('detail.page_subtitle') }}</p>
+  <p>{{ t('detail.page_subtitle') }}</p>
 </div>
 
-<div class="card mt-16" style="position: relative;">
-  <!-- 点赞功能 - 右上角小按钮 -->
-  <div style="position: absolute; top: 16px; right: 16px; z-index: 10;">
-    <button id="like-btn" class="like-button" data-submission-id="{{ sub.id }}" style="
-      background: transparent;
-      border: 1px solid #e9ecef;
-      border-radius: 16px;
-      padding: 8px 12px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 13px;
-      font-weight: 400;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      color: #6c757d;
-      min-width: 60px;
-      justify-content: center;
-    ">
-      <svg class="like-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition: all 0.2s ease;">
+<div class="detail-container">
+  <div class="detail-card">
+    <!-- Like Button -->
+    <button id="like-btn" class="like-button" data-submission-id="{{ sub.id }}">
+      <svg class="like-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>
       </svg>
       <span class="like-count">{{ sub.like_count }}</span>
     </button>
-  </div>
-  
-  <div class="section-title">{{ t('detail.basic_info') }}</div>
-  <div class="mt-8">
-    <div><strong>{{ t('detail.ta_name') }}</strong> {{ sub.get_display_name(masked=from_privacy) }}</div>
-  </div>
 
-  <div class="mt-16">
-    <strong>{{ t('detail.tags_label') }}</strong>
-    <div style="margin-top: 8px; display: flex; flex-wrap: wrap; gap: 8px;">
-      <!-- 褒义标签 -->
-      {% if sub.tag_loyal %}<span class="badge badge-positive">{{ t('tags.loyal') }}</span>{% endif %}
-      {% if sub.tag_stable %}<span class="badge badge-positive">{{ t('tags.stable') }}</span>{% endif %}
-      {% if sub.tag_sincere %}<span class="badge badge-positive">{{ t('tags.sincere') }}</span>{% endif %}
-      {% if sub.tag_humorous %}<span class="badge badge-positive">{{ t('tags.humorous') }}</span>{% endif %}
+    <!-- Basic Info -->
+    <div class="detail-section">
+      <div class="detail-section-title">{{ t('detail.basic_info') }}</div>
+      <div class="detail-info-row">
+        <strong>{{ t('detail.ta_name') }}</strong> {{ sub.get_display_name(masked=from_privacy) }}
+      </div>
+    </div>
 
-      <!-- 贬义标签 -->
-      {% if sub.tag_positive %}<span class="badge badge-negative">{{ t('tags.cheating') }}</span>{% endif %}
-      {% if sub.tag_calm %}<span class="badge badge-negative">{{ t('tags.cold_violence') }}</span>{% endif %}
-      {% if sub.tag_leadership %}<span class="badge badge-negative">{{ t('tags.pua') }}</span>{% endif %}
-      {% if sub.tag_homework_heavy %}<span class="badge badge-negative">{{ t('tags.money') }}</span>{% endif %}
+    <!-- Tags -->
+    <div class="detail-section">
+      <div class="detail-section-title">{{ t('detail.tags_label') }}</div>
+      <div class="detail-badges">
+        {% if sub.tag_loyal %}<span class="badge badge-positive">{{ t('tags.loyal') }}</span>{% endif %}
+        {% if sub.tag_stable %}<span class="badge badge-positive">{{ t('tags.stable') }}</span>{% endif %}
+        {% if sub.tag_sincere %}<span class="badge badge-positive">{{ t('tags.sincere') }}</span>{% endif %}
+        {% if sub.tag_humorous %}<span class="badge badge-positive">{{ t('tags.humorous') }}</span>{% endif %}
+        {% if sub.tag_positive %}<span class="badge badge-negative">{{ t('tags.cheating') }}</span>{% endif %}
+        {% if sub.tag_calm %}<span class="badge badge-negative">{{ t('tags.cold_violence') }}</span>{% endif %}
+        {% if sub.tag_leadership %}<span class="badge badge-negative">{{ t('tags.pua') }}</span>{% endif %}
+        {% if sub.tag_homework_heavy %}<span class="badge badge-negative">{{ t('tags.money') }}</span>{% endif %}
+        {% if sub.tag_custom %}<span class="badge badge-neutral">{{ sub.tag_custom }}</span>{% endif %}
+      </div>
+    </div>
 
-      <!-- 自定义标签 -->
-      {% if sub.tag_custom %}<span class="badge badge-neutral">{{ sub.tag_custom }}</span>{% endif %}
+    <!-- Description -->
+    <div class="detail-section">
+      <div class="detail-section-title">{{ t('detail.description_label') }}</div>
+      <div class="detail-description">{{ sub.description | safe_newlines | safe }}</div>
+    </div>
+
+    <!-- Evidence -->
+    <div class="detail-section">
+      <div class="detail-section-title">{{ t('detail.evidence_thumbnails') }}</div>
+      {% if sub.allow_public_evidence %}
+        <div class="alert-box">
+          <strong>{{ t('detail.privacy_notice_title') }}</strong>
+          {{ t('detail.privacy_notice_desc') }}
+        </div>
+        <div class="evidence-grid">
+          {% for ev in sub.evidences %}
+            {% if ev.category in ['image','chat_image','video','chat_video','document'] %}
+              <div class="evidence-item">
+                <img src="/evidence/{{ sub.id }}/{{ ev.id }}" alt="{{ ev.original_filename }}" />
+                <div class="evidence-filename">
+                  {{ t('detail.file') }} {{ ev.original_filename }}
+                </div>
+                {% if ev.description %}
+                  <div class="evidence-desc">
+                    <strong>{{ t('detail.description') }}</strong> {{ ev.description }}
+                  </div>
+                {% endif %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% else %}
+        <p style="color: var(--text-light); font-size: 15px;">{{ t('detail.evidence_not_public') }}</p>
+      {% endif %}
+    </div>
+
+    <!-- Appeal Hint -->
+    <div class="alert-box">
+      {{ t('detail.appeal_hint') }}
     </div>
   </div>
 
-  <div class="mt-16 prose">
-    <div class="section-title">{{ t('detail.description_label') }}</div>
-    <div class="mt-8">{{ sub.description | safe_newlines | safe }}</div>
-  </div>
+  <!-- Comments Section -->
+  <div class="detail-card comments-section">
+    <div class="detail-section-title">{{ t('detail.comments_section') }}</div>
 
-  <div class="mt-16">
-    <div class="section-title">{{ t('detail.evidence_thumbnails') }}</div>
-    {% if sub.allow_public_evidence %}
-      <div class="alert alert-info mt-8 mb-8">
-        <div class="alert-content">
-          <strong>{{ t('detail.privacy_notice_title') }}</strong>
-          <p style="margin: 8px 0 0;">{{ t('detail.privacy_notice_desc') }}</p>
+    <!-- Comment Input -->
+    <div class="comment-input-wrapper">
+      <form id="comment-form">
+        <input type="hidden" id="reply-to-id" value="">
+        <div id="reply-indicator" class="reply-indicator" style="display: none;">
+          <span id="reply-indicator-text"></span>
+          <button type="button" id="cancel-reply" class="btn-cancel-reply">{{ t('detail.cancel_reply') }}</button>
         </div>
-      </div>
-      <div class="mt-8">
-        {# 先显示图片类型的证据 #}
-        {% for ev in sub.evidences %}
-          {% if ev.category in ['image','chat_image'] %}
-            <div class="mt-8" style="border: 1px solid #dee2e6; border-radius: 8px; padding: 12px;">
-              <img class="preview" src="/evidence/{{ sub.id }}/{{ ev.id }}" alt="{{ ev.original_filename }}" style="border-radius: 8px; max-width: 300px; display: block;" />
-              <div class="mt-2" style="font-size: 12px; color: var(--text-secondary);">{{ t('detail.file') }} {{ ev.original_filename }}</div>
-              {% if ev.description %}
-              <div class="mt-2" style="font-size: 13px; padding: 8px; background: #f8f9fa; border-radius: 4px;">
-                <strong>{{ t('detail.description') }}</strong> {{ ev.description }}
-              </div>
-              {% endif %}
-            </div>
-          {% endif %}
-        {% endfor %}
-        
-        {# 然后显示视频类型的证据 #}
-        {% for ev in sub.evidences %}
-          {% if ev.category in ['video', 'chat_video'] %}
-            <div class="mt-8" style="border: 1px solid #dee2e6; border-radius: 8px; padding: 12px;">
-              <img src="/evidence/{{ sub.id }}/{{ ev.id }}" alt="视频缩略图" style="max-width: 300px; border-radius: 8px; display: block;" />
-              <div class="mt-2" style="font-size: 12px; color: var(--text-secondary);">{{ t('detail.video_file') }} {{ ev.original_filename }}</div>
-              {% if ev.description %}
-              <div class="mt-2" style="font-size: 13px; padding: 8px; background: #f8f9fa; border-radius: 4px;">
-                <strong>{{ t('detail.description') }}</strong> {{ ev.description }}
-              </div>
-              {% endif %}
-            </div>
-          {% endif %}
-        {% endfor %}
-        
-        {# 最后显示文档类型的证据 #}
-        {% for ev in sub.evidences %}
-          {% if ev.category == 'document' %}
-            <div class="mt-8" style="border: 1px solid #dee2e6; border-radius: 8px; padding: 12px;">
-              <img src="/evidence/{{ sub.id }}/{{ ev.id }}" alt="文档缩略图" style="max-width: 300px; border-radius: 8px; display: block;" />
-              <div class="mt-2" style="font-size: 12px; color: var(--text-secondary);">{{ t('detail.document_file') }} {{ ev.original_filename }}</div>
-              {% if ev.description %}
-              <div class="mt-2" style="font-size: 13px; padding: 8px; background: #f8f9fa; border-radius: 4px;">
-                <strong>{{ t('detail.description') }}</strong> {{ ev.description }}
-              </div>
-              {% endif %}
-            </div>
-          {% endif %}
-        {% endfor %}
-      </div>
-    {% else %}
-      <div class="muted">{{ t('detail.evidence_not_public') }}</div>
-    {% endif %}
-  </div>
+        <textarea
+          id="comment-input"
+          class="comment-textarea"
+          placeholder="{{ t('detail.comment_placeholder') }}"
+          rows="4"
+          maxlength="1000"
+        ></textarea>
+        <div class="comment-footer-bar">
+          <span id="char-count" class="char-counter">0/1000</span>
+          <button type="submit" id="submit-comment-btn" class="btn-submit-comment">
+            {{ t('detail.post_comment') }}
+          </button>
+        </div>
+      </form>
+    </div>
 
-
-  <div class="callout mt-16 meta">{{ t('detail.appeal_hint') }}</div>
-
-  <!-- 评论区 -->
-  <div class="mt-24">
-    <div class="section-title">{{ t('detail.comments_section') }}</div>
-
-    <!-- 评论列表 -->
-    <div id="comments-list" class="mt-12">
-      <div id="comments-loading" style="text-align: center; padding: 32px; color: var(--text-light); font-size: 15px;">
+    <!-- Comments List -->
+    <div id="comments-list">
+      <div id="comments-loading" class="loading-spinner">
         <div style="display: inline-flex; align-items: center; gap: 8px;">
-          <div style="width: 16px; height: 16px; border: 2px solid var(--border-light); border-top: 2px solid var(--nyu-purple); border-radius: 50%; animation: spin 1s linear infinite;"></div>
+          <div style="width: 16px; height: 16px; border: 2px solid rgba(0,0,0,0.1); border-top: 2px solid var(--nyu-purple); border-radius: 50%; animation: spin 1s linear infinite;"></div>
           {{ t('detail.loading_comments') }}
         </div>
       </div>
-      <div id="comments-container" style="display: none;">
-      </div>
-      <div id="comments-empty" style="display: none; text-align: center; padding: 32px 0;">
+      <div id="comments-container"></div>
+      <div id="comments-empty" class="empty-state" style="display: none;">
         <div style="font-size: 15px; color: var(--text-secondary); margin-bottom: 4px;">{{ t('detail.no_comments') }}</div>
         <div style="font-size: 13px; color: var(--text-light);">{{ t('detail.first_comment') }}</div>
       </div>
     </div>
-
-    <!-- 评论输入区域 -->
-    <div class="mt-16">
-      <form id="comment-form">
-        <input type="hidden" id="reply-to-id" value="">
-        <div id="reply-indicator" style="display: none; margin-bottom: 12px; padding: 12px 16px; background: var(--nyu-purple-pale); border-radius: 10px; font-size: 14px; color: var(--nyu-purple-dark); border: 1px solid var(--border-ultra-light);">
-          <span id="reply-indicator-text" style="font-weight: 500;"></span>
-          <button type="button" id="cancel-reply" style="margin-left: 12px; background: var(--nyu-purple); color: white; border: none; border-radius: 6px; padding: 4px 8px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s ease;" onmouseover="this.style.background='var(--nyu-purple-dark)';" onmouseout="this.style.background='var(--nyu-purple)';">{{ t('detail.cancel_reply') }}</button>
-        </div>
-
-        <div class="form-group">
-          <textarea
-            id="comment-input"
-            name="content"
-            placeholder="{{ t('detail.comment_placeholder') }}"
-            rows="4"
-            maxlength="1000"
-            style="
-              width: 100%;
-              padding: 16px;
-              border: 2px solid var(--border-light);
-              border-radius: 10px;
-              resize: vertical;
-              font-family: inherit;
-              font-size: 15px;
-              line-height: 1.5;
-              background: var(--surface-primary);
-              transition: all 0.2s ease;
-              outline: none;
-            " onfocus="this.style.borderColor='var(--nyu-purple)'" onblur="this.style.borderColor='var(--border-light)'" onmouseover="this.style.borderColor='var(--text-light)'" onmouseout="this.style.borderColor='var(--border-light)'"></textarea>
-        </div>
-
-        <!-- 审核失败提示区域 -->
-        <div id="moderation-notice" style="display: none; margin-top: 12px; padding: 16px 20px; background: var(--badge-warning); border: 1px solid #ffeaa7; border-radius: 12px; color: #B85C00; border-left: 4px solid #B85C00;">
-        </div>
-
-        <div class="mt-8" style="display: flex; justify-content: space-between; align-items: center;">
-          <span id="char-count" style="font-size: 13px; color: var(--text-light); font-weight: 500;">0/1000</span>
-          <button
-            type="submit"
-            id="submit-comment-btn"
-            style="
-              padding: 12px 24px;
-              background: var(--gradient-primary);
-              color: white;
-              border: none;
-              border-radius: 10px;
-              font-weight: 600;
-              font-size: 15px;
-              cursor: pointer;
-              transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-              box-shadow: var(--shadow-md);
-              min-width: 120px;
-            "
-            onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='var(--shadow-lg)';"
-            onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='var(--shadow-md)';"
-          >{{ t('detail.post_comment') }}</button>
-        </div>
-      </form>
-    </div>
   </div>
 
-  <div class="mt-16">
-    <a class="btn" href="/appeal/{{ sub.id }}">{{ t('detail.appeal_btn') }}</a>
-    <a class="btn secondary" href="/">{{ t('detail.back_btn') }}</a>
+  <!-- Action Buttons -->
+  <div class="action-buttons">
+    <a href="/appeal/{{ sub.id }}" class="btn-action primary">{{ t('detail.appeal_btn') }}</a>
+    <a href="/" class="btn-action secondary">{{ t('detail.back_btn') }}</a>
   </div>
 </div>
 
@@ -223,377 +553,195 @@ document.addEventListener('DOMContentLoaded', function() {
     const submissionId = likeBtn.dataset.submissionId;
     const likeIcon = likeBtn.querySelector('.like-icon');
     const likeCount = likeBtn.querySelector('.like-count');
-    
+
     let isLiked = false;
     let isLoading = false;
-    
-    // 获取初始点赞状态
+
+    // Get like status
     function fetchLikeStatus() {
         fetch(`/api/like-status/${submissionId}`)
             .then(response => response.json())
             .then(data => {
-                if (data.error) {
-                    console.error('获取点赞状态失败:', data.error);
-                    return;
+                if (!data.error) {
+                    isLiked = data.liked;
+                    updateLikeUI(data.like_count);
                 }
-                isLiked = data.liked;
-                updateLikeUI(data.like_count);
             })
-            .catch(error => {
-                console.error('网络错误:', error);
-            });
+            .catch(error => console.error('Error:', error));
     }
-    
-    // 更新点赞UI
+
+    // Update like UI
     function updateLikeUI(count) {
         likeCount.textContent = count;
-        
         if (isLiked) {
-            likeBtn.style.background = 'rgba(87, 6, 140, 0.08)';
-            likeBtn.style.borderColor = 'rgba(87, 6, 140, 0.3)';
-            likeBtn.style.color = '#57068C';
-            likeIcon.style.fill = 'rgba(87, 6, 140, 0.7)';
-            likeBtn.title = '取消点赞';
+            likeBtn.classList.add('liked');
+            likeIcon.style.fill = 'currentColor';
         } else {
-            likeBtn.style.background = 'transparent';
-            likeBtn.style.borderColor = '#e9ecef';
-            likeBtn.style.color = '#6c757d';
+            likeBtn.classList.remove('liked');
             likeIcon.style.fill = 'none';
-            likeBtn.title = '点赞';
         }
     }
-    
-    // 处理点赞点击
+
+    // Handle like click
     likeBtn.addEventListener('click', function() {
         if (isLoading) return;
-        
+
         isLoading = true;
-        likeBtn.style.opacity = '0.7';
-        likeBtn.style.cursor = 'not-allowed';
-        
-        fetch(`/api/like/${submissionId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.error) {
-                alert('操作失败: ' + data.error);
-                return;
-            }
-            
-            isLiked = data.liked;
-            updateLikeUI(data.like_count);
-            
-            // 简单的动画反馈
-            likeIcon.style.transform = 'scale(1.2)';
-            setTimeout(() => {
-                likeIcon.style.transform = 'scale(1)';
-            }, 200);
-        })
-        .catch(error => {
-            console.error('网络错误:', error);
-            alert('网络错误，请稍后重试');
-        })
-        .finally(() => {
-            isLoading = false;
-            likeBtn.style.opacity = '1';
-            likeBtn.style.cursor = 'pointer';
-        });
+        likeBtn.style.opacity = '0.6';
+
+        fetch(`/api/like/${submissionId}`, { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+                if (!data.error) {
+                    isLiked = data.liked;
+                    updateLikeUI(data.like_count);
+                }
+            })
+            .catch(error => console.error('Error:', error))
+            .finally(() => {
+                isLoading = false;
+                likeBtn.style.opacity = '1';
+            });
     });
-    
-    // 页面加载时获取点赞状态
+
     fetchLikeStatus();
-    
-    // 悬停效果
-    likeBtn.addEventListener('mouseenter', function() {
-        if (!isLoading) {
-            this.style.background = 'rgba(87, 6, 140, 0.05)';
-            this.style.borderColor = 'rgba(87, 6, 140, 0.2)';
-        }
-    });
-    
-    likeBtn.addEventListener('mouseleave', function() {
-        if (!isLoading) {
-            if (isLiked) {
-                this.style.background = 'rgba(87, 6, 140, 0.08)';
-                this.style.borderColor = 'rgba(87, 6, 140, 0.3)';
-            } else {
-                this.style.background = 'transparent';
-                this.style.borderColor = '#e9ecef';
-            }
-        }
-    });
-    
-    // ===== 评论功能 =====
+
+    // Comments functionality
     const commentForm = document.getElementById('comment-form');
     const commentInput = document.getElementById('comment-input');
-    const submitCommentBtn = document.getElementById('submit-comment-btn');
-    const moderationNotice = document.getElementById('moderation-notice');
-    const commentsLoading = document.getElementById('comments-loading');
-    const commentsContainer = document.getElementById('comments-container');
-    const commentsEmpty = document.getElementById('comments-empty');
+    const submitBtn = document.getElementById('submit-comment-btn');
     const charCount = document.getElementById('char-count');
     const replyToId = document.getElementById('reply-to-id');
     const replyIndicator = document.getElementById('reply-indicator');
     const replyIndicatorText = document.getElementById('reply-indicator-text');
     const cancelReplyBtn = document.getElementById('cancel-reply');
-    
+    const commentsLoading = document.getElementById('comments-loading');
+    const commentsContainer = document.getElementById('comments-container');
+    const commentsEmpty = document.getElementById('comments-empty');
 
-    
-    // 渲染单个评论（递归处理回复）
+    // Character counter
+    commentInput.addEventListener('input', function() {
+        const length = this.value.length;
+        charCount.textContent = `${length}/1000`;
+        if (length > 900) charCount.style.color = '#DC2626';
+        else if (length > 700) charCount.style.color = '#B85C00';
+        else charCount.style.color = 'var(--text-light)';
+    });
+
+    // Render comment
     function renderComment(comment, level = 0) {
-        const marginLeft = level * 16; // 每层缩进16px，更紧凑
-        const borderLeftColor = level > 0 ? 'var(--nyu-purple)' : 'transparent';
-        const borderLeftWidth = level > 0 ? '2px' : '0px';
-        const backgroundColor = level > 0 ? 'var(--surface-secondary)' : 'var(--surface-primary)';
-        
+        const marginLeft = level * 32;
+        const isReply = level > 0;
+
         let html = `
-            <div class="comment-item" style="
-                border: 1px solid var(--border-light); 
-                border-radius: 12px; 
-                padding: 20px; 
-                margin-bottom: 16px; 
-                margin-left: ${marginLeft}px;
-                background: ${backgroundColor};
-                border-left: ${borderLeftWidth} solid ${borderLeftColor};
-                box-shadow: var(--shadow-sm);
-                transition: all 0.2s ease;
-            " onmouseover="this.style.boxShadow='var(--shadow-md)'; this.style.transform='translateY(-1px)';" 
-               onmouseout="this.style.boxShadow='var(--shadow-sm)'; this.style.transform='translateY(0)';">
-                <div class="comment-content" style="
-                    line-height: 1.6; 
-                    margin-bottom: 12px;
-                    font-size: 15px;
-                    color: var(--text-primary);
-                ">${escapeHtml(comment.content)}</div>
-                <div class="comment-footer" style="
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    font-size: 13px; 
-                    color: var(--text-light);
-                ">
-                    <span style="font-weight: 500;">${comment.created_at}</span>
-                    <button class="reply-btn" onclick="startReply(${comment.id}, '${escapeHtml(comment.content).substring(0, 50)}...')" style="
-                        background: var(--nyu-purple-pale);
-                        border: none;
-                        color: var(--nyu-purple);
-                        cursor: pointer;
-                        border-radius: 20px;
-                        font-size: 12px;
-                        padding: 6px 12px;
-                        font-weight: 600;
-                        transition: all 0.2s ease;
-                    " onmouseover="this.style.background='var(--nyu-purple)'; this.style.color='white';" 
-                       onmouseout="this.style.background='var(--nyu-purple-pale)'; this.style.color='var(--nyu-purple)';">回复</button>
+            <div class="comment-item ${isReply ? 'reply' : ''}" style="margin-left: ${marginLeft}px;">
+                <div class="comment-content">${escapeHtml(comment.content)}</div>
+                <div class="comment-meta">
+                    <span>${comment.created_at}</span>
+                    <button class="btn-reply" onclick="startReply(${comment.id}, '${escapeHtml(comment.content).substring(0, 30)}...')">
+                        {{ t('detail.reply_btn') }}
+                    </button>
                 </div>
             </div>
         `;
-        
-        // 递归渲染回复
+
         if (comment.replies && comment.replies.length > 0) {
             comment.replies.forEach(reply => {
                 html += renderComment(reply, level + 1);
             });
         }
-        
+
         return html;
     }
-    
-    // 加载评论列表
+
+    // Load comments
     function loadComments() {
         fetch(`/api/comments/${submissionId}`)
             .then(response => response.json())
             .then(data => {
                 commentsLoading.style.display = 'none';
-                
+
                 if (data.comments && data.comments.length > 0) {
+                    let html = '';
+                    data.comments.forEach(comment => {
+                        html += renderComment(comment);
+                    });
+                    commentsContainer.innerHTML = html;
                     commentsContainer.style.display = 'block';
                     commentsEmpty.style.display = 'none';
-                    
-                    let commentsHtml = '';
-                    data.comments.forEach(comment => {
-                        commentsHtml += renderComment(comment);
-                    });
-                    commentsContainer.innerHTML = commentsHtml;
                 } else {
                     commentsContainer.style.display = 'none';
                     commentsEmpty.style.display = 'block';
                 }
             })
             .catch(error => {
-                console.error('加载评论失败:', error);
-                commentsLoading.innerHTML = '<div style="color: #dc3545;">加载评论失败，请刷新重试</div>';
+                console.error('Error:', error);
+                commentsLoading.innerHTML = '<div style="color: #DC2626;">加载评论失败</div>';
             });
     }
-    
-    // HTML转义函数
+
+    // Escape HTML
     function escapeHtml(text) {
         const div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML.replace(/\n/g, '<br>');
     }
-    
-    // 开始回复评论
-    window.startReply = function(commentId, commentPreview) {
+
+    // Start reply
+    window.startReply = function(commentId, preview) {
         replyToId.value = commentId;
-        replyIndicatorText.textContent = `回复: ${commentPreview}`;
-        replyIndicator.style.display = 'block';
-        commentInput.placeholder = '请输入回复内容...（最多1000字符）';
+        replyIndicatorText.textContent = `{{ t('detail.replying_to') }} ${preview}`;
+        replyIndicator.style.display = 'flex';
         commentInput.focus();
-        
-        // 滚动到评论输入框
-        commentForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
     };
-    
-    // 取消回复
+
+    // Cancel reply
     cancelReplyBtn.addEventListener('click', function() {
         replyToId.value = '';
         replyIndicator.style.display = 'none';
-        commentInput.placeholder = '请输入您的评论...（最多1000字符）';
     });
-    
-    // 提交评论
+
+    // Submit comment
     commentForm.addEventListener('submit', function(e) {
         e.preventDefault();
-        
+
         const content = commentInput.value.trim();
-        if (!content) {
-            alert('请输入评论内容');
-            return;
-        }
-        
-        if (content.length > 1000) {
-            alert('评论内容太长，最多1000字符');
-            return;
-        }
-        
-        // 禁用提交按钮
-        submitCommentBtn.disabled = true;
-        submitCommentBtn.textContent = '提交中...';
-        moderationNotice.style.display = 'none';
-        
-        const requestData = {
+        if (!content) return;
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = '提交中...';
+
+        const data = {
             submission_id: parseInt(submissionId),
             content: content
         };
-        
-        // 如果是回复，添加parent_id
+
         if (replyToId.value) {
-            requestData.parent_id = parseInt(replyToId.value);
+            data.parent_id = parseInt(replyToId.value);
         }
-        
+
         fetch('/api/comments', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(requestData)
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
         })
-        .then(response => {
-            // 先检查HTTP状态码
-            if (response.status === 429) {
-                // Rate limit错误，需要特殊处理
-                return response.json().then(data => {
-                    throw new Error(`RATE_LIMIT: ${data.error || '请求太频繁，请稍后重试'}`);
-                });
-            } else if (response.status === 400) {
-                // 审核未通过或其他客户端错误
-                return response.json().then(data => {
-                    if (!data.success) {
-                        // 这是审核未通过的情况
-                        return { ...data, _isModeration: true };
-                    }
-                    throw new Error(data.error || '请求错误');
-                });
-            } else if (!response.ok) {
-                // 其他HTTP错误
-                return response.json().then(data => {
-                    throw new Error(data.error || '服务器错误');
-                });
-            }
-            // 成功响应
-            return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
             if (data.success) {
-                // 评论发布成功
                 commentInput.value = '';
                 charCount.textContent = '0/1000';
-                charCount.style.color = 'var(--text-light)';
-                
-                // 清除回复状态
                 replyToId.value = '';
                 replyIndicator.style.display = 'none';
-                commentInput.placeholder = '请输入您的评论...（最多1000字符）';
-                
-                // 重新加载评论列表
                 loadComments();
-                
-                // 显示成功提示
-                const successMsg = document.createElement('div');
-                successMsg.style.cssText = 'position: fixed; top: 20px; right: 20px; background: #d4edda; color: #155724; padding: 12px 20px; border: 1px solid #c3e6cb; border-radius: 6px; z-index: 1000;';
-                successMsg.textContent = '评论发布成功！';
-                document.body.appendChild(successMsg);
-                setTimeout(() => document.body.removeChild(successMsg), 3000);
-            } else if (data._isModeration) {
-                // 审核未通过，显示修改建议
-                moderationNotice.innerHTML = `<strong>审核未通过：</strong>${data.client_notice || data.message || '请修改后重新提交'}`;
-                moderationNotice.style.display = 'block';
-                
-                // 滚动到提示区域
-                moderationNotice.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             }
         })
-        .catch(error => {
-            console.error('提交评论失败:', error);
-            
-            // 检查是否是rate limit错误
-            if (error.message && error.message.startsWith('RATE_LIMIT:')) {
-                const rateLimitMessage = error.message.replace('RATE_LIMIT: ', '');
-                
-                // 显示rate limit提示
-                const rateLimitMsg = document.createElement('div');
-                rateLimitMsg.style.cssText = 'position: fixed; top: 20px; right: 20px; background: #fff3cd; color: #856404; padding: 12px 20px; border: 1px solid #ffeaa7; border-radius: 6px; z-index: 1000; max-width: 300px;';
-                rateLimitMsg.textContent = rateLimitMessage;
-                document.body.appendChild(rateLimitMsg);
-                setTimeout(() => {
-                    if (document.body.contains(rateLimitMsg)) {
-                        document.body.removeChild(rateLimitMsg);
-                    }
-                }, 5000);
-            } else {
-                // 其他错误
-                alert('提交评论失败，请稍后重试');
-            }
-        })
+        .catch(error => console.error('Error:', error))
         .finally(() => {
-            // 恢复提交按钮
-            submitCommentBtn.disabled = false;
-            submitCommentBtn.textContent = '发表评论';
+            submitBtn.disabled = false;
+            submitBtn.textContent = '{{ t('detail.post_comment') }}';
         });
     });
-    
-    // 字符计数功能
-    commentInput.addEventListener('input', function() {
-        const currentLength = this.value.length;
-        const maxLength = 1000;
-        charCount.textContent = `${currentLength}/${maxLength}`;
-        
-        // 根据字符数改变颜色
-        if (currentLength > maxLength * 0.9) {
-            charCount.style.color = '#DC2626';
-        } else if (currentLength > maxLength * 0.7) {
-            charCount.style.color = '#B85C00';
-        } else {
-            charCount.style.color = 'var(--text-light)';
-        }
-    });
-    
-    // 页面加载时获取评论
+
     loadComments();
 });
 </script>

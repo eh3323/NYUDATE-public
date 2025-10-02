@@ -986,24 +986,26 @@
         }
       }
       
-      // 证据文件现在为可选，不再验证文件数量
-      
-      // 验证上传的文件都有描述（只有当上传了文件时才需要验证）
+      // 验证证据文件必须上传
       const totalFiles = selectedFiles.image.length + selectedFiles.doc.length + selectedFiles.chat.length;
-      if (totalFiles > 0) {
-        let missingDescriptions = false;
-        ['image', 'doc', 'chat'].forEach(type => {
-          for (let i = 0; i < selectedFiles[type].length; i++) {
-            if (!fileDescriptions[type][i] || fileDescriptions[type][i].trim() === '') {
-              missingDescriptions = true;
-            }
+      if (totalFiles === 0) {
+        alert('请至少上传一个证据文件（图片、文档或视频）');
+        return;
+      }
+
+      // 验证上传的文件都有描述
+      let missingDescriptions = false;
+      ['image', 'doc', 'chat'].forEach(type => {
+        for (let i = 0; i < selectedFiles[type].length; i++) {
+          if (!fileDescriptions[type][i] || fileDescriptions[type][i].trim() === '') {
+            missingDescriptions = true;
           }
-        });
-        
-        if (missingDescriptions) {
-          alert('请为所有证据文件填写说明');
-          return;
         }
+      });
+
+      if (missingDescriptions) {
+        alert('请为所有证据文件填写说明');
+        return;
       }
       
       // 验证至少填写了一个名字

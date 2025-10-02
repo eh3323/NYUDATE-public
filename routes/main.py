@@ -150,9 +150,9 @@ def index():
     ).scalar()
     has_more = total_showable > len(privacy_submissions)
     next_limit = limit + 12 if has_more else limit
-    # 计算真实数量并增加37（用于显示更大的数据库规模）
+    # 计算真实数量并增加142（用于显示更大的数据库规模）
     real_count = db.session.query(func.count(Submission.id)).filter(Submission.status == ReviewStatus.APPROVED).scalar()
-    total_count = real_count + 37
+    total_count = real_count + 142
     last_updated = db.session.query(func.max(Submission.updated_at)).filter(Submission.status == ReviewStatus.APPROVED).scalar()
     # Convert to America/New_York timezone for display on homepage
     if last_updated is not None:

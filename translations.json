@@ -15,12 +15,12 @@
   },
   "hero": {
     "title": {
-      "zh": "NYU Dating Copilot",
-      "en": "NYU Dating Copilot"
+      "zh": "NYU Date",
+      "en": "NYU Date"
     },
     "subtitle": {
       "zh": "前车之鉴,近在眼前",
-      "en": "Learn from others' experiences"
+      "en": "Know Before You Date"
     },
     "search_placeholder": {
       "zh": "TA的中文全名/英文全名",
@@ -283,8 +283,8 @@
       "en": "Please describe your personal real experience, avoid baseless accusations and any privacy info. Recommended to include: time, place, people (use aliases), cause, process, result."
     },
     "evidence_title": {
-      "zh": "证据材料（推荐）",
-      "en": "Evidence Materials (Recommended)"
+      "zh": "证据材料",
+      "en": "Evidence Materials"
     },
     "privacy_protection": {
       "zh": "隐私保护提示",

@@ -130,26 +130,28 @@
   .btn-upload-glass {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 6px;
     padding: 12px 24px;
-    background: rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(10px);
+    background: white;
     color: var(--nyu-purple);
-    border: 1px solid rgba(87, 6, 140, 0.2);
+    border: 1px solid rgba(0, 0, 0, 0.12);
     border-radius: 12px;
     font-size: 17px;
     font-weight: 600;
     text-decoration: none;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.2s ease;
     letter-spacing: -0.003em;
   }
 
   .btn-upload-glass:hover {
-    background: var(--nyu-purple);
-    color: white;
-    border-color: var(--nyu-purple);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(87, 6, 140, 0.2);
+    background: var(--surface-secondary);
+    border-color: rgba(0, 0, 0, 0.2);
+    transform: scale(1.02);
+  }
+
+  .btn-upload-glass:active {
+    transform: scale(0.98);
   }
 
   .hero-meta {

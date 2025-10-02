@@ -1,26 +1,47 @@
 {% extends 'base.html' %}
 {% block content %}
 <style>
-  /* 放大首页标题与副标题 */
+  /* Apple 风格首页大标题 - NYU 紫色主题 */
   .hero .hero-content h1 {
-    font-size: 72px;
-    line-height: 1.25;
-    letter-spacing: -1.6px;
+    font-size: 96px;
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.015em;
     white-space: nowrap;
     overflow: visible;
     display: inline-block;
-    margin-bottom: 16px;
+    margin-bottom: 20px;
     padding-right: 8px;
+    background: linear-gradient(135deg, #57068C 0%, #8900E1 50%, #FF6B35 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    position: relative;
+    animation: gradient-shift 8s ease infinite;
+    background-size: 200% 200%;
   }
-  .hero .hero-content { max-width: 900px; overflow: visible; }
+
+  @keyframes gradient-shift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+  .hero .hero-content {
+    max-width: 980px;
+    overflow: visible;
+  }
   @media (max-width: 768px) {
     .hero .hero-content h1 {
-      font-size: 40px;
+      font-size: 48px;
       white-space: normal;
+      letter-spacing: -0.012em;
     }
   }
   .hero .hero-content p {
-    font-size: 20px;
+    font-size: 21px;
+    line-height: 1.381;
+    font-weight: 400;
+    letter-spacing: -0.003em;
+    color: var(--text-secondary);
   }
 
   /* 放大搜索框（输入与按钮） */
@@ -43,20 +64,35 @@
     border-radius: 12px;
   }
 
-  /* 使命区块标题与副标题更大一些 */
+  /* 使命区块标题 - Apple 风格 + NYU 紫色 */
   .mission-title {
-    font-size: 40px;
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1.0833333333;
+    letter-spacing: -0.009em;
+    background: linear-gradient(135deg, var(--nyu-purple) 0%, var(--nyu-purple-light) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
   .mission-subtitle {
-    font-size: 20px;
+    font-size: 21px;
+    line-height: 1.381;
+    font-weight: 400;
+    letter-spacing: -0.003em;
   }
 
-  /* 精选区块标题字号微调 */
+  /* 精选区块标题 - Apple 风格 */
   .section-title {
-    font-size: 26px;
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.008em;
   }
   .section-subtitle {
-    font-size: 18px;
+    font-size: 19px;
+    line-height: 1.421;
+    letter-spacing: -0.002em;
   }
   
   /* 卡片标题样式优化 */
